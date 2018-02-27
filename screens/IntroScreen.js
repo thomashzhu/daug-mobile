@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, Dimensions, View, Image, Text, Button } from 'react-native';
+import { Dimensions, View, Image, Text, Button } from 'react-native';
 
 import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';

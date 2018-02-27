@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import ProfileScreen from './ProfileScreen';
 import SocialFeedScreen from './SocialFeedScreen';
@@ -7,15 +7,14 @@ import SocialFeedScreen from './SocialFeedScreen';
 export default class SignupScreen extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-      </View>
+      <View style={styles.container} />
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
-    flex: 1, 
-    backgroundColor: 'green'
-  }
-});
+    flex: 1,
+    backgroundColor: 'green',
+  },
+};
