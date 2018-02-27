@@ -1,5 +1,6 @@
 var SOCIAL_FEED_MOCK_DATA = [
   {
+    id: 0,
     name: 'Monte Thakkar',
     image: 'https://avatars2.githubusercontent.com/u/7840686?s=400&v=4',
     post: {
@@ -9,6 +10,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 1,
     name: 'Ryan Liszewski',
     image: 'https://avatars3.githubusercontent.com/u/5275250?s=460&v=4',
     location: 'Santa Cruz',
@@ -19,6 +21,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 2,
     name: 'Thomas Zhu',
     image: 'http://thomaszhu.com/resources/thomas_avatar.jpeg',
     location: 'Santa Cruz',
@@ -29,6 +32,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 3,
     name: 'Bhavesh Chowdhury',
     image: 'https://avatars3.githubusercontent.com/u/13439148?s=460&v=4',
     location: 'Santa Cruz',
@@ -39,6 +43,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 4,
     name: 'Sukhjit Singh',
     image: 'https://avatars1.githubusercontent.com/u/18251293?s=400&u=1ee2922f2dd90d94bb4efbec7cc815ef510a0ad7&v=4',
     post: {
@@ -48,6 +53,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 5,
     name: 'Prakash Gurung',
     image: 'https://avatars.githubusercontent.com/makkhay',
     location: 'Santa Cruz',
@@ -58,6 +64,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 6,
     name: 'Nicholas Szeto',
     image: 'https://avatars1.githubusercontent.com/u/23561635?s=460&v=4',
     post: {
@@ -67,6 +74,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 7,
     name: 'Emanuel Saunders',
     image: 'https://scontent-lax3-2.cdninstagram.com/vp/1ee634d2bdf29d5a327858a15ccfdf42/5B26F2E8/t51.2885-19/s150x150/18160691_1198139890329419_5383374010954285056_a.jpg',
     location: 'Santa Cruz',
@@ -77,6 +85,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 8,
     name: 'William Hua',
     image: 'https://avatars3.githubusercontent.com/u/36139326?s=460&v=4',
     location: 'Santa Cruz',
@@ -87,6 +96,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 9,
     name: 'Mitul Savani',
     image: 'https://scontent.fsnc1-1.fna.fbcdn.net/v/t31.0-8/18556546_1553987881278489_849408995015005895_o.jpg?oh=bb65219475a9cbac85ca7090e7ee877b&oe=5ADE398B',
     post: {
@@ -96,6 +106,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 10,
     name: 'Jakhongir Khusanov',
     image: 'https://avatars0.githubusercontent.com/u/25942541?s=460&v=4',
     location: 'Santa Cruz',
@@ -106,6 +117,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 11,
     name: 'Teodora Caneva',
     image: 'https://scontent-lax3-1.xx.fbcdn.net/v/t1.0-1/c44.0.320.320/p320x320/20914645_1579156895438534_1027285013181250707_n.jpg?oh=0ff1b3c4c8bc8e00edb84cecd660d0fe&oe=5B1C897A',
     post: {
@@ -115,6 +127,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 12,
     name: 'Affaan Ghazzali',
     image: 'https://avatars0.githubusercontent.com/u/32111151?s=460&v=4',
     post: {
@@ -124,6 +137,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 13,
     name: 'Girish Rawat',
     image: 'https://avatars2.githubusercontent.com/u/6697235?s=460&v=4',
     post: {
@@ -133,6 +147,7 @@ var SOCIAL_FEED_MOCK_DATA = [
     }
   },
   {
+    id: 14,
     name: 'Karan Gupta',
     image: 'https://avatars1.githubusercontent.com/u/19352928?s=460&v=4',
     location: 'Santa Cruz',

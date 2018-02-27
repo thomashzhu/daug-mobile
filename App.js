@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import IntroScreen from './screens/IntroScreen';
 
@@ -9,10 +9,10 @@ const App = () => (
   </View>
 );
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
   },
-});
+};
 
 export default App;

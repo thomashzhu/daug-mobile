@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, FlatList, View, Image, Text, TouchableOpacity, Button } from 'react-native';
+import { SafeAreaView, ScrollView, FlatList, View, Image, Text, TouchableOpacity } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 
 import ProfileScreen from './ProfileScreen';
@@ -12,6 +12,7 @@ class SocialFeedScreen extends React.Component {
 
     this.state = {
       screen: '',
+      selectedIndex: -1,
       isCommented: false,
       isLiked: false,
     };
@@ -19,12 +20,12 @@ class SocialFeedScreen extends React.Component {
 
   renderPost = ({ item }) => {
     const { isCommented, isLiked } = this.state;
-
+    
     return (
       <View style={styles.postContainer}>
-        <View style={styles.line} />
+        <View style={styles.border} />
 
-        <TouchableOpacity style={styles.postHeader} onPress={() => this.setState({ screen: 'ProfileScreen' })}>
+        <TouchableOpacity style={styles.postHeader} onPress={() => this.setState({ screen: 'ProfileScreen', selectedIndex: item.id })}>
           <Image style={styles.postHeaderIcon} source={{ uri: item.image }} />
           <Text style={styles.postHeaderName}>{item.name}</Text>
         </TouchableOpacity>
@@ -64,8 +65,10 @@ class SocialFeedScreen extends React.Component {
   };
 
   render() {
-    if (this.state.screen === 'ProfileScreen') {
-      return <ProfileScreen />;
+    const { screen, selectedIndex } = this.state;
+
+    if (screen === 'ProfileScreen' && selectedIndex !== -1) {
+      return <ProfileScreen index={selectedIndex} />;
     }
 
     return (
@@ -91,7 +94,7 @@ const styles = {
   list: {
     flex: 1,
   },
-  line: {
+  border: {
     height: 1,
     backgroundColor: '#DADADA',
   },
