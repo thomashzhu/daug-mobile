@@ -44,7 +44,7 @@ class LoginScreen extends React.Component {
       <View style={styles.container}>
         <View style={styles.textInputContainer}>
           <RoundTextInput
-            iconName="user"
+            iconName="envelope-open"
             placeholder="Email"
             value={this.state.email}
             textDidChange={(text) => { this.setState({ email: text }); }}
