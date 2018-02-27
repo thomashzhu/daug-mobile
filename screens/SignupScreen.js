@@ -17,13 +17,15 @@ class SignupScreen extends React.Component {
   }
 
   onSubmitButtonPressed = (name, email, password) => {
-    Keyboard.dismiss();
-
-    Alert.alert(
-      'Success',
-      'Name: ' + name + '\nEmail: ' + email + '\nPassword: ' + password,
-    );
-    this.setState({ screen: 'SocialFeedScreen' });
+    if (name !== '' && email !== '' && password !== '') {
+      Keyboard.dismiss();
+      
+      Alert.alert(
+        'Success',
+        'Name: ' + name + '\nEmail: ' + email + '\nPassword: ' + password,
+      );
+      this.setState({ screen: 'SocialFeedScreen' });
+    }
   }
 
   render() {
