@@ -1,8 +1,9 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, FlatList, View, Image, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, FlatList, View, Image, Text, TouchableOpacity, Platform, NativeModules } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
-
 import ProfileScreen from './ProfileScreen';
+
+const { StatusBarManager } = NativeModules;
 
 const posts = require('../data/posts');
 
@@ -38,25 +39,31 @@ class SocialFeedScreen extends React.Component {
         <View style={styles.postStatistics}>
           <Text style={styles.postStatisticsDate}>{item.post.date}</Text>
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            style={styles.postInteractiveButtonContainer}
+            onPress={() => { this.setState({ isCommented: !isCommented }); }}
+          >
             <View style={styles.postInteractiveButton}>
               <SimpleLineIcons
                 name={isCommented ? 'bubbles' : 'bubble'}
                 color={isCommented ? 'red' : 'black'}
                 size={24}
-                onPress={() => this.setState({ isCommented: !isCommented })}
               />
               <Text style={styles.postInteractionCount}>10</Text>
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => { this.setState({ isLiked: !isLiked }); }}>
+          <TouchableOpacity
+            style={styles.postInteractiveButtonContainer}
+            onPress={() => { this.setState({ isLiked: !isLiked }); }}
+          >
             <View style={styles.postInteractiveButton}>
               <SimpleLineIcons
                 name="heart"
                 color={isLiked ? 'red' : 'black'}
                 size={24}
               />
+              <Text style={styles.postInteractionCount}>200</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -72,7 +79,7 @@ class SocialFeedScreen extends React.Component {
     }
 
     return (
-      <SafeAreaView>
+      <SafeAreaView style={styles.safeArea}>
         <ScrollView style={styles.scrollView}>
           <FlatList
             style={styles.list}
@@ -88,7 +95,11 @@ class SocialFeedScreen extends React.Component {
 }
 
 const styles = {
-  container: {
+  safeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'ios' ? 0 : StatusBarManager.HEIGHT,
+  },
+  scrollView: {
     flex: 1,
   },
   list: {
@@ -138,12 +149,15 @@ const styles = {
   postStatisticsDate: {
     flex: 1,
   },
-  postInteractiveButton: {
-    flexDirection: 'row',
-    paddingLeft: 8,
-    paddingRight: 8,
+  postInteractiveButtonContainer: {
+    marginLeft: 8,
+    marginRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  postInteractiveButton: {
+    flex: 1,
+    flexDirection: 'row',
   },
   postInteractionCount: {
     paddingLeft: 4,

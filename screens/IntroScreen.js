@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, View, Image, Text, Button } from 'react-native';
+import { Dimensions, View, Image, Text, TouchableOpacity } from 'react-native';
 
 import LoginScreen from './LoginScreen';
 import SignupScreen from './SignupScreen';
@@ -32,22 +32,13 @@ class IntroScreen extends React.Component {
         </View>
 
         <View style={styles.buttonRow}>
-          <View style={styles.buttonContainer}>
-            <Button
-              color="white"
-              style={styles.accountButton}
-              onPress={() => this.setState({ screen: 'LoginScreen' })}
-              title="Login"
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button
-              color="white"
-              style={styles.accountButton}
-              onPress={() => this.setState({ screen: 'SignupScreen' })}
-              title="Signup"
-            />
-          </View>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.setState({ screen: 'LoginScreen' })}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.setState({ screen: 'SignupScreen' })}>
+            <Text style={styles.buttonText}>Signup</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -93,6 +84,14 @@ const styles = {
   buttonContainer: {
     flex: 1,
     paddingBottom: 24,
+    paddingLeft: 8,
+    paddingRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
   },
 };
 

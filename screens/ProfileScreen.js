@@ -69,7 +69,7 @@ const styles = {
     flex: 1,
   },
   header: {
-    height: 200,
+    height: 180,
   },
   headerImage: {
     resizeMode: 'cover',

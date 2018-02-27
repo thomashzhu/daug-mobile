@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, View, Button, Alert, Keyboard } from 'react-native';
+import { Dimensions, View, TouchableOpacity, Alert, Keyboard, Text } from 'react-native';
 
 import SocialFeedScreen from './SocialFeedScreen';
 import RoundTextInput from '../components/round_text_input';
@@ -16,19 +16,21 @@ class LoginScreen extends React.Component {
   }
 
   onSubmitButtonPressed = (email, password) => {
-    Keyboard.dismiss();
-
-    if (email === 'dev@thomaszhu.com' && password === 'rn') {
-      Alert.alert(
-        'Success',
-        'Email: dev@thomaszhu.com\nPassword is "rn"',
-      );
-      this.setState({ screen: 'SocialFeedScreen' });
-    } else {
-      Alert.alert(
-        'Failure',
-        'Email is dev@thomaszhu.com, and password is "rn".',
-      );
+    if (email !== '' && password !== '') {
+      Keyboard.dismiss();
+    
+      if (email === 'dev@thomaszhu.com' && password === 'rn') {
+        Alert.alert(
+          'Success',
+          'Email: dev@thomaszhu.com\nPassword is "rn"',
+        );
+        this.setState({ screen: 'SocialFeedScreen' });
+      } else {
+        Alert.alert(
+          'Failure',
+          'Email is dev@thomaszhu.com, and password is "rn".',
+        );
+      }
     }
   }
 
@@ -59,14 +61,12 @@ class LoginScreen extends React.Component {
           />
         </View>
 
-        <View style={[styles.backgroundContainer, isLoginInfoNotEmpty && { backgroundColor: '#29ABEC' }]}>
-          <Button
-            style={styles.submitButton}
-            title="Login"
-            color="white"
-            onPress={() => this.onSubmitButtonPressed(email, password)}
-          />
-        </View>
+        <TouchableOpacity
+          style={[styles.backgroundContainer, isLoginInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
+          onPress={() => this.onSubmitButtonPressed(email, password)}
+        >
+          <Text style={styles.submitButton}>Login</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -92,7 +92,8 @@ const styles = {
     alignItems: 'center',
   },
   submitButton: {
-    flex: 1,
+    color: 'white',
+    fontSize: 18,
   },
 };
 

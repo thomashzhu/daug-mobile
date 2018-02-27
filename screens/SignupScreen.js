@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, View, Button, Alert, Keyboard } from 'react-native';
+import { Dimensions, View, TouchableOpacity, Text, Alert, Keyboard } from 'react-native';
 
 import SocialFeedScreen from './SocialFeedScreen';
 import RoundTextInput from '../components/round_text_input';
@@ -63,14 +63,12 @@ class SignupScreen extends React.Component {
           />
         </View>
 
-        <View style={[styles.backgroundContainer, isSignupInfoNotEmpty && { backgroundColor: '#29ABEC' }]}>
-          <Button
-            style={styles.submitButton}
-            title="Sign Up"
-            color="white"
-            onPress={() => this.onSubmitButtonPressed(name, email, password)}
-          />
-        </View>
+        <TouchableOpacity
+          style={[styles.backgroundContainer, isSignupInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
+          onPress={() => this.onSubmitButtonPressed(name, email, password)}
+        >
+          <Text style={styles.submitButton}>Sign Up</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -96,7 +94,8 @@ const styles = {
     alignItems: 'center',
   },
   submitButton: {
-    flex: 1,
+    color: 'white',
+    fontSize: 18,
   },
 };
 

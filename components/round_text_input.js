@@ -19,6 +19,7 @@ const RoundTextInput = props => (
       secureTextEntry={props.isPassword}
       placeholder={props.placeholder}
       placeholderTextColor="white"
+      underlineColorAndroid="rgba(0,0,0,0)"
       onChangeText={(text) => { props.textDidChange(text); }}
     />
   </View>
@@ -46,6 +47,7 @@ const styles = {
     borderWidth: 1,
     borderColor: 'white',
     marginBottom: 20,
+    paddingRight: textInputHeight / 2,
     justifyContent: 'center',
   },
   iconContainer: {
