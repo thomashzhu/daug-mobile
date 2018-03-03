@@ -1,10 +1,7 @@
-import acrobatics from './acrobatics.json';
 import curlyHair from './curlyHair.json';
+import search from './search.json';
 
 module.exports = [
-  acrobatics,
-  curlyHair,
-  acrobatics,
-  acrobatics,
+  search,
   curlyHair,
 ];

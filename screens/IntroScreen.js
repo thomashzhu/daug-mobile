@@ -11,6 +11,8 @@ const { width } = Dimensions.get('window');
 const { Lottie } = DangerZone;
 const sources = require('../assets/lotties/intro');
 
+let isPlayed = false;
+
 class IntroScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -32,14 +34,14 @@ class IntroScreen extends React.Component {
       ref={(animation) => {
         this.state.animations[index] = animation;
 
-        if (this.state.animations.length === 4) {
+        if (!isPlayed && this.state.animations[0]) {
+          isPlayed = true;
           this.playAnimation(0);
         }
       }}
       style={{
         width: 400,
         height: 400,
-        backgroundColor: '#DBDBDB',
       }}
       source={item}
     />
