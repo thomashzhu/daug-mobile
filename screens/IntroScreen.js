@@ -1,10 +1,15 @@
 import React from 'react';
-import { Dimensions, View, Image, Text, TouchableOpacity } from 'react-native';
+import { Dimensions, View, Text, TouchableOpacity } from 'react-native';
+
+import Carousel from 'react-native-snap-carousel';
+import { DangerZone } from 'expo';
 
 import LoginScreen from './LoginScreen';
 import SignUpScreen from './SignUpScreen';
 
-const logo = require('../assets/daug_logo.png');
+const { width } = Dimensions.get('window');
+const { Lottie } = DangerZone;
+const sources = require('../assets/lotties/intro');
 
 class IntroScreen extends React.Component {
   constructor(props) {
@@ -12,10 +17,35 @@ class IntroScreen extends React.Component {
 
     this.state = {
       screen: null,
+      animations: [],
     };
   }
 
-  renderScreen() {
+  playAnimation = (index) => {
+    const animation = this.state.animations[index];
+    animation.reset();
+    animation.play();
+  }
+
+  renderSlide = ({ item, index }) => (
+    <Lottie
+      ref={(animation) => {
+        this.state.animations[index] = animation;
+
+        if (this.state.animations.length === 4) {
+          this.playAnimation(0);
+        }
+      }}
+      style={{
+        width: 400,
+        height: 400,
+        backgroundColor: '#DBDBDB',
+      }}
+      source={item}
+    />
+  );
+
+  render() {
     const { screen } = this.state;
 
     if (screen === 'LoginScreen') {
@@ -26,9 +56,18 @@ class IntroScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <View style={styles.logo}>
-          <Image style={styles.logoImage} source={logo} />
-          <Text style={styles.logoName}>DAUG</Text>
+        <View style={styles.topContainer}>
+          <View style={styles.carouselContainer}>
+            <Carousel
+              data={sources}
+              renderItem={this.renderSlide}
+              sliderWidth={width}
+              itemWidth={400}
+              inactiveSlideScale={0.94}
+              inactiveSlideOpacity={0.7}
+              onSnapToItem={this.playAnimation}
+            />
+          </View>
         </View>
 
         <View style={styles.buttonRow}>
@@ -43,12 +82,6 @@ class IntroScreen extends React.Component {
       </View>
     );
   }
-
-  render() {
-    return (
-      this.renderScreen()
-    );
-  }
 }
 
 const styles = {
@@ -56,23 +89,19 @@ const styles = {
     flex: 1,
     backgroundColor: '#ED8271',
   },
-  logo: {
+  topContainer: {
     flex: 1,
-    paddingLeft: 50,
-    paddingRight: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  logoImage: {
-    resizeMode: 'contain',
-    width: Dimensions.get('window').width / 2,
-    height: Dimensions.get('window').width / 2,
+  carouselContainer: {
+    height: width,
   },
-  logoName: {
-    color: 'white',
-    marginTop: 24,
-    fontWeight: 'bold',
-    fontSize: 30,
+  carousel: {
+    alignSelf: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonRow: {
     flexDirection: 'row',
