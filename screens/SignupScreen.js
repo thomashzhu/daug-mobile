@@ -4,7 +4,7 @@ import { Dimensions, View, TouchableOpacity, Text, Alert, Keyboard } from 'react
 import SocialFeedScreen from './SocialFeedScreen';
 import RoundTextInput from '../components/round_text_input';
 
-class SignupScreen extends React.Component {
+class SignUpScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -31,7 +31,7 @@ class SignupScreen extends React.Component {
   render() {
     const { screen, name, email, password } = this.state;
 
-    const isSignupInfoNotEmpty = !(email === '' || password === '');
+    const isSignUpInfoNotEmpty = !(email === '' || password === '');
 
     if (screen === 'SocialFeedScreen') {
       return <SocialFeedScreen />;
@@ -64,7 +64,7 @@ class SignupScreen extends React.Component {
         </View>
 
         <TouchableOpacity
-          style={[styles.backgroundContainer, isSignupInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
+          style={[styles.backgroundContainer, isSignUpInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
           onPress={() => this.onSubmitButtonPressed(name, email, password)}
         >
           <Text style={styles.submitButton}>Sign Up</Text>
@@ -99,4 +99,4 @@ const styles = {
   },
 };
 
-export default SignupScreen;
+export default SignUpScreen;

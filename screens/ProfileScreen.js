@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Image, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
+
+import IntroScreen from './IntroScreen';
 
 const posts = require('../data/posts');
 
@@ -10,15 +12,20 @@ class ProfileScreen extends React.Component {
 
     this.state = {
       index: props.index,
+      screen: '',
     };
   }
 
   render() {
-    const { index } = this.state;
+    const { index, screen } = this.state;
     const item = posts[index];
 
+    if (screen === 'IntroScreen') {
+      return <IntroScreen />;
+    }
+
     return (
-      <View style={styles.container}>
+      <View style={{ flex: 1 }}>
         <View style={styles.header}>
           <Image style={styles.headerImage} source={{ uri: item.post.image }} />
         </View>
@@ -54,7 +61,13 @@ class ProfileScreen extends React.Component {
 
         <View style={styles.border} />
         
-        <ScrollView style={styles.personalFeeds} />
+        <View style={styles.personalFeeds}>
+          <TouchableOpacity onPress={() => this.setState({ screen: 'IntroScreen' })}>
+            <View style={styles.logoutButtonContainer}>
+              <Text style={styles.logoutButton}>LOGOUT</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -65,9 +78,6 @@ ProfileScreen.propTypes = {
 };
 
 const styles = {
-  container: {
-    flex: 1,
-  },
   header: {
     height: 180,
   },
@@ -76,10 +86,10 @@ const styles = {
     flex: 1,
   },
   profilePanel: {
-    height: 200,
+    height: 180,
   },
   topPanel: {
-    height: 110,
+    height: 90,
     flexDirection: 'row',
   },
   profilePictureContainer: {
@@ -96,8 +106,8 @@ const styles = {
   },
   statusPanel: {
     flex: 1,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 4,
+    paddingRight: 4,
   },
   topStatusPanelRow: {
     flex: 2,
@@ -149,6 +159,20 @@ const styles = {
   },
   personalFeeds: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoutButtonContainer: {
+    height: 48,
+    width: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#29ABEC',
+  },
+  logoutButton: {
+    color: '#FFF',
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 };
 

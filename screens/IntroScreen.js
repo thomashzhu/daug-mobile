@@ -2,7 +2,7 @@ import React from 'react';
 import { Dimensions, View, Image, Text, TouchableOpacity } from 'react-native';
 
 import LoginScreen from './LoginScreen';
-import SignupScreen from './SignupScreen';
+import SignUpScreen from './SignUpScreen';
 
 const logo = require('../assets/daug_logo.png');
 
@@ -20,8 +20,8 @@ class IntroScreen extends React.Component {
 
     if (screen === 'LoginScreen') {
       return <LoginScreen />;
-    } else if (screen === 'SignupScreen') {
-      return <SignupScreen />;
+    } else if (screen === 'SignUpScreen') {
+      return <SignUpScreen />;
     }
 
     return (
@@ -36,8 +36,8 @@ class IntroScreen extends React.Component {
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.setState({ screen: 'SignupScreen' })}>
-            <Text style={styles.buttonText}>Signup</Text>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.setState({ screen: 'SignUpScreen' })}>
+            <Text style={styles.buttonText}>SignUp</Text>
           </TouchableOpacity>
         </View>
       </View>
