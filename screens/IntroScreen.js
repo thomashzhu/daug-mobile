@@ -78,7 +78,7 @@ class IntroScreen extends React.Component {
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.buttonContainer} onPress={() => this.setState({ screen: 'SignUpScreen' })}>
-            <Text style={styles.buttonText}>SignUp</Text>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </View>

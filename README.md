@@ -59,18 +59,22 @@ Social feed screen based on Facebook.
 - [x] Attach screenshots/gif of screens to `README.MD`
 
 ### Demo
+<br />Intro Screen (with Carousel)
 <div style={{display: flex; flex-direction: row}}>
   <img src="screenshots/Intro_Screen_Slide_1.JPG" width="250" />
   <img src="screenshots/Intro_Screen_Slide_2.JPG" width="250" />
 </div>
+<br />Login & Sign up
 <div style={{display: flex; flex-direction: row}}>
   <img src="screenshots/Login_Screen.JPG" width="250" />
   <img src="screenshots/Sign_Up_Screen.JPG" width="250" />
 </div>
+<br />Facebook & Twitter Auth
 <div style={{display: flex; flex-direction: row}}>
   <img src="screenshots/Facebook_Auth.JPG" width="250" />
   <img src="screenshots/Twitter_Auth.JPG" width="250" />
 </div>
+<br />Social Feed & Profile
 <div style={{display: flex; flex-direction: row}}>
   <img src="screenshots/Social_Feed.JPG" width="250" />
   <img src="screenshots/Profile_Screen.JPG" width="250" />
