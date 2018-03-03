@@ -1,8 +1,12 @@
 import React from 'react';
 import { Dimensions, View, TouchableOpacity, Text, Alert, Keyboard } from 'react-native';
+import { AuthSession } from 'expo';
 
 import SocialFeedScreen from './SocialFeedScreen';
 import RoundTextInput from '../components/round_text_input';
+
+const auth0ClientId = 'U1bMTR9reF5bQkeDsfDKvlwQ8C9ozk8v';
+const auth0Domain = 'https://thomashzhu.auth0.com';
 
 class SignUpScreen extends React.Component {
   constructor(props) {
@@ -14,8 +18,6 @@ class SignUpScreen extends React.Component {
       email: '',
       password: '',
     };
-
-    this.fbLogIn = this.fbLogIn.bind(this);
   }
 
   onSubmitButtonPressed = (name, email, password) => {
@@ -30,11 +32,35 @@ class SignUpScreen extends React.Component {
     }
   }
 
-  async fbLogIn() {
+  fbLogIn = async () => {
     const { type } = await Expo.Facebook.logInWithReadPermissionsAsync('170311167091859', {
       permissions: ['public_profile'],
     });
     if (type === 'success') {
+      this.setState({ screen: 'SocialFeedScreen' });
+    }
+  }
+
+  toQueryString = (params) => {
+    return '?' + Object.entries(params)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+  }
+
+  twitterLogIn = async () => {
+    const redirectUrl = AuthSession.getRedirectUrl();
+    const result = await AuthSession.startAsync({
+      authUrl: `${auth0Domain}/authorize` + this.toQueryString({
+        connection: 'twitter',
+        client_id: auth0ClientId,
+        response_type: 'token',
+        scope: 'openid name',
+        redirect_uri: redirectUrl,
+      }),
+    });
+
+    console.log(result);
+    if (result.type === 'success') {
       this.setState({ screen: 'SocialFeedScreen' });
     }
   }
@@ -86,6 +112,13 @@ class SignUpScreen extends React.Component {
           onPress={this.fbLogIn}
         >
           <Text style={styles.submitButton}>Facebook</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.backgroundContainer, { backgroundColor: '#29ABEC' }]}
+          onPress={this.twitterLogIn}
+        >
+          <Text style={styles.submitButton}>Twitter</Text>
         </TouchableOpacity>
       </View>
     );
