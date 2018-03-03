@@ -14,6 +14,8 @@ class SignUpScreen extends React.Component {
       email: '',
       password: '',
     };
+
+    this.fbLogIn = this.fbLogIn.bind(this);
   }
 
   onSubmitButtonPressed = (name, email, password) => {
@@ -24,6 +26,15 @@ class SignUpScreen extends React.Component {
         'Success',
         'Name: ' + name + '\nEmail: ' + email + '\nPassword: ' + password,
       );
+      this.setState({ screen: 'SocialFeedScreen' });
+    }
+  }
+
+  async fbLogIn() {
+    const { type } = await Expo.Facebook.logInWithReadPermissionsAsync('170311167091859', {
+      permissions: ['public_profile'],
+    });
+    if (type === 'success') {
       this.setState({ screen: 'SocialFeedScreen' });
     }
   }
@@ -68,6 +79,13 @@ class SignUpScreen extends React.Component {
           onPress={() => this.onSubmitButtonPressed(name, email, password)}
         >
           <Text style={styles.submitButton}>Sign Up</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.backgroundContainer, { backgroundColor: '#29ABEC' }]}
+          onPress={this.fbLogIn}
+        >
+          <Text style={styles.submitButton}>Facebook</Text>
         </TouchableOpacity>
       </View>
     );

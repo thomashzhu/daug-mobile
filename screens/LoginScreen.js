@@ -13,6 +13,8 @@ class LoginScreen extends React.Component {
       email: '',
       password: '',
     };
+
+    this.fbLogIn = this.fbLogIn.bind(this);
   }
 
   onSubmitButtonPressed = (email, password) => {
@@ -31,6 +33,15 @@ class LoginScreen extends React.Component {
           'Email is dev@thomaszhu.com, and password is "rn".',
         );
       }
+    }
+  }
+
+  async fbLogIn() {
+    const { type } = await Expo.Facebook.logInWithReadPermissionsAsync('170311167091859', {
+      permissions: ['public_profile'],
+    });
+    if (type === 'success') {
+      this.setState({ screen: 'SocialFeedScreen' });
     }
   }
 
@@ -66,6 +77,13 @@ class LoginScreen extends React.Component {
           onPress={() => this.onSubmitButtonPressed(email, password)}
         >
           <Text style={styles.submitButton}>Login</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.backgroundContainer, { backgroundColor: '#29ABEC' }]}
+          onPress={this.fbLogIn}
+        >
+          <Text style={styles.submitButton}>Facebook</Text>
         </TouchableOpacity>
       </View>
     );
