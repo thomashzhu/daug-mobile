@@ -48,20 +48,33 @@ Social feed screen based on Facebook.
 ### TODO
 
 - [x] Design & build an Intro Screen
-  - [ ] :star: **Bonus:** Add [Snap Carousel](https://github.com/archriss/react-native-snap-carousel) with [Lottie animations](https://docs.expo.io/versions/latest/sdk/lottie.html) to Intro Screen
+  - [x] :star: **Bonus:** Add [Snap Carousel](https://github.com/archriss/react-native-snap-carousel) with [Lottie animations](https://docs.expo.io/versions/latest/sdk/lottie.html) to Intro Screen
 - [x] Design & build an Signup Screen
-  - [ ] :star: **Bonus:** Add buttons to sign up with Facebook & Twitter
+  - [x] :star: **Bonus:** Add buttons to sign up with Facebook & Twitter
 - [x] Design & build an Login Screen
-  - [ ] :star: **Bonus:** Add buttons to login with Facebook & Twitter
+  - [x] :star: **Bonus:** Add buttons to login with Facebook & Twitter
 - [x] Design & build an Profile Screen
-  - [ ] :star: **Bonus:** Add the Logout button
+  - [x] :star: **Bonus:** Add the Logout button
 - [x] Design & build an Social Feed Screen with [Mock Data](https://raw.githubusercontent.com/mobilespace/daug-mobile/master/app/utils/constants.js?token=AHejrmtQeRKU4ntCxaYLoNiWDlF-kQdKks5am8vHwA%3D%3D)
 - [x] Attach screenshots/gif of screens to `README.MD`
 
 ### Demo
-![working_gif_assignment_4](https://i.imgur.com/MAd6DTz.gif)
-<br />
-https://i.imgur.com/MAd6DTz.gif
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/Intro_Screen_Slide_1.JPG" width="250" />
+  <img src="screenshots/Intro_Screen_Slide_2.JPG" width="250" />
+</div>
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/Login_Screen.JPG" width="250" />
+  <img src="screenshots/Sign_Up_Screen.JPG" width="250" />
+</div>
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/Facebook_Auth.JPG" width="250" />
+  <img src="screenshots/Twitter_Auth.JPG" width="250" />
+</div>
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/Social_Feed.JPG" width="250" />
+  <img src="screenshots/Profile_Screen.JPG" width="250" />
+</div>
 
 ## Submission
 
