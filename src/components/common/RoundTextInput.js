@@ -1,12 +1,12 @@
 import React from 'react';
-import { Dimensions, View, TextInput } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, View, TextInput } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
 const textInputHeight = 48;
 
 const RoundTextInput = props => (
-  <View style={styles.textInputContainer}>
+  <KeyboardAvoidingView style={styles.textInputContainer}>
     <View style={styles.iconContainer}>
       <SimpleLineIcons
         name={props.iconName}
@@ -22,7 +22,7 @@ const RoundTextInput = props => (
       underlineColorAndroid="rgba(0,0,0,0)"
       onChangeText={(text) => { props.textDidChange(text); }}
     />
-  </View>
+  </KeyboardAvoidingView>
 );
 
 RoundTextInput.propTypes = {
