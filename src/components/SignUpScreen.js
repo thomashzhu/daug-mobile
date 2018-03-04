@@ -1,40 +1,34 @@
 import React from 'react';
-import { Dimensions, View, TouchableOpacity, Alert, Keyboard, Text } from 'react-native';
+import { Dimensions, View, TouchableOpacity, Text, Alert, Keyboard } from 'react-native';
 import { AuthSession } from 'expo';
 
 import SocialFeedScreen from './SocialFeedScreen';
-import RoundTextInput from '../components/round_text_input';
+import { RoundTextInput } from '../components/common';
 
 const auth0ClientId = 'U1bMTR9reF5bQkeDsfDKvlwQ8C9ozk8v';
 const auth0Domain = 'https://thomashzhu.auth0.com';
 
-class LoginScreen extends React.Component {
+class SignUpScreen extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       screen: 'null',
+      name: '',
       email: '',
       password: '',
     };
   }
 
-  onSubmitButtonPressed = (email, password) => {
-    if (email !== '' && password !== '') {
+  onSubmitButtonPressed = (name, email, password) => {
+    if (name !== '' && email !== '' && password !== '') {
       Keyboard.dismiss();
-    
-      if (email === 'dev@thomaszhu.com' && password === 'rn') {
-        Alert.alert(
-          'Success',
-          'Email: dev@thomaszhu.com\nPassword is "rn"',
-        );
-        this.setState({ screen: 'SocialFeedScreen' });
-      } else {
-        Alert.alert(
-          'Failure',
-          'Email is dev@thomaszhu.com, and password is "rn".',
-        );
-      }
+      
+      Alert.alert(
+        'Success',
+        'Name: ' + name + '\nEmail: ' + email + '\nPassword: ' + password,
+      );
+      this.setState({ screen: 'SocialFeedScreen' });
     }
   }
 
@@ -72,8 +66,9 @@ class LoginScreen extends React.Component {
   }
 
   render() {
-    const { screen, email, password } = this.state;
-    const isLoginInfoNotEmpty = !(email === '' || password === '');
+    const { screen, name, email, password } = this.state;
+
+    const isSignUpInfoNotEmpty = !(email === '' || password === '');
 
     if (screen === 'SocialFeedScreen') {
       return <SocialFeedScreen />;
@@ -82,6 +77,13 @@ class LoginScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.textInputContainer}>
+          <RoundTextInput
+            iconName="user"
+            placeholder="Name"
+            value={this.state.name}
+            textDidChange={(text) => { this.setState({ name: text }); }}
+          />
+
           <RoundTextInput
             iconName="envelope-open"
             placeholder="Email"
@@ -99,10 +101,10 @@ class LoginScreen extends React.Component {
         </View>
 
         <TouchableOpacity
-          style={[styles.backgroundContainer, isLoginInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
-          onPress={() => this.onSubmitButtonPressed(email, password)}
+          style={[styles.backgroundContainer, isSignUpInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
+          onPress={() => this.onSubmitButtonPressed(name, email, password)}
         >
-          <Text style={styles.submitButton}>Login</Text>
+          <Text style={styles.submitButton}>Sign Up</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -131,7 +133,7 @@ const styles = {
     alignItems: 'center',
   },
   textInputContainer: {
-    height: 136,
+    height: 204,
   },
   backgroundContainer: {
     flexDirection: 'row',
@@ -148,4 +150,4 @@ const styles = {
   },
 };
 
-export default LoginScreen;
+export default SignUpScreen;

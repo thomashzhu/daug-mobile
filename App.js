@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import IntroScreen from './screens/IntroScreen';
+import IntroScreen from './src/components/IntroScreen';
 
 const App = () => (
   <View style={styles.container}>
