@@ -1,18 +1,26 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, FlatList, View, Image, Text, TouchableOpacity, Platform, NativeModules } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import ProfileScreen from './ProfileScreen';
+import PropTypes from 'prop-types';
 
 const { StatusBarManager } = NativeModules;
 
 const posts = require('../data/posts');
 
 class SocialFeedScreen extends React.Component {
+  static navigationOptions = {
+    title: 'DAUG',
+    headerStyle: {
+      backgroundColor: '#FFF',
+      borderBottomWidth: 0,
+    },
+    headerTintColor: '#FD746C',
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
-      selectedIndex: -1,
       isCommented: false,
       isLiked: false,
     };
@@ -25,7 +33,7 @@ class SocialFeedScreen extends React.Component {
       <View style={styles.postContainer}>
         <View style={styles.border} />
 
-        <TouchableOpacity style={styles.postHeader} onPress={() => this.setState({ screen: 'ProfileScreen', selectedIndex: item.id })}>
+        <TouchableOpacity style={styles.postHeader} onPress={() => this.props.navigation.navigate('Profile', { item })}>
           <Image style={styles.postHeaderIcon} source={{ uri: item.image }} />
           <Text style={styles.postHeaderName}>{item.name}</Text>
         </TouchableOpacity>
@@ -70,28 +78,31 @@ class SocialFeedScreen extends React.Component {
     );
   };
 
-  render() {
-    const { screen, selectedIndex } = this.state;
-
-    if (screen === 'ProfileScreen' && selectedIndex !== -1) {
-      return <ProfileScreen index={selectedIndex} />;
-    }
-
-    return (
-      <SafeAreaView style={styles.safeArea}>
-        <ScrollView style={styles.scrollView}>
-          <FlatList
-            style={styles.list}
-            keyExtractor={(item, index) => index}
-            extraData={this.state}
-            data={posts}
-            renderItem={this.renderPost}
-          />
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
+  render = () => (
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.scrollView}>
+        <FlatList
+          style={styles.list}
+          keyExtractor={(item, index) => index}
+          extraData={this.state}
+          data={posts}
+          renderItem={this.renderPost}
+        />
+      </ScrollView>
+    </SafeAreaView>
+  )
 }
+
+SocialFeedScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        
+      }),
+    }),
+  }).isRequired,
+};
 
 const styles = {
   safeArea: {

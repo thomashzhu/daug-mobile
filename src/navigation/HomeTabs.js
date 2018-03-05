@@ -4,7 +4,7 @@ import { TabNavigator } from 'react-navigation';
 import PropTypes from 'prop-types';
 import { SimpleLineIcons } from '@expo/vector-icons';
 
-import SocialFeedScreen from '../components/SocialFeedScreen';
+import SocialFeedStack from './SocialFeedStack';
 import ProfileScreen from '../components/ProfileScreen';
 
 const SocialFeedTabIcon = ({ tintColor }) => (
@@ -31,7 +31,7 @@ ProfileTabIcon.propTypes = {
 
 export default TabNavigator({
   SocialTab: {
-    screen: SocialFeedScreen,
+    screen: SocialFeedStack,
     navigationOptions: {
       tabBarLabel: 'Feed',
       tabBarIcon: SocialFeedTabIcon,

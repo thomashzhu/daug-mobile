@@ -5,17 +5,27 @@ import PropTypes from 'prop-types';
 const posts = require('../data/posts');
 
 class ProfileScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Profile',
+    headerStyle: {
+      backgroundColor: '#FFF',
+      borderBottomWidth: 0,
+    },
+    headerTintColor: '#FD746C',
+  };
+  
   constructor(props) {
     super(props);
 
+    const { navigation } = this.props;
+
     this.state = {
-      index: props.index || 0,
+      item: navigation ? posts[0] : navigation.state.params,
     };
   }
 
   render() {
-    const { index } = this.state;
-    const item = posts[index];
+    const { item } = this.state;
 
     return (
       <View style={{ flex: 1 }}>
@@ -67,7 +77,23 @@ class ProfileScreen extends React.Component {
 }
 
 ProfileScreen.propTypes = {
-  index: PropTypes.number.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        item: PropTypes.shape({
+          name: PropTypes.string,
+          post: PropTypes.shape({
+            image: PropTypes.string,
+          }),
+        }),
+      }),
+    }),
+  }),
+};
+
+ProfileScreen.defaultProps = {
+  navigation: null,
 };
 
 const styles = {

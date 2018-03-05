@@ -1,11 +1,8 @@
 import React from 'react';
 import { Dimensions, View, Text, TouchableOpacity } from 'react-native';
-
 import Carousel from 'react-native-snap-carousel';
 import { DangerZone } from 'expo';
-
-import LoginScreen from './LoginScreen';
-import SignUpScreen from './SignUpScreen';
+import PropTypes from 'prop-types';
 
 const { width } = Dimensions.get('window');
 const { Lottie } = DangerZone;
@@ -22,7 +19,6 @@ class IntroScreen extends React.Component {
     super(props);
 
     this.state = {
-      screen: null,
       animations: [],
     };
   }
@@ -51,44 +47,45 @@ class IntroScreen extends React.Component {
     />
   );
 
-  render() {
-    const { screen } = this.state;
-
-    if (screen === 'LoginScreen') {
-      return <LoginScreen />;
-    } else if (screen === 'SignUpScreen') {
-      return <SignUpScreen />;
-    }
-
-    return (
-      <View style={styles.container}>
-        <View style={styles.topContainer}>
-          <View style={styles.carouselContainer}>
-            <Carousel
-              data={sources}
-              renderItem={this.renderSlide}
-              sliderWidth={width}
-              itemWidth={400}
-              inactiveSlideScale={0.94}
-              inactiveSlideOpacity={0.7}
-              onSnapToItem={this.playAnimation}
-            />
-          </View>
-        </View>
-
-        <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Login')}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('SignUp')}>
-            <Text style={styles.buttonText}>Sign Up</Text>
-          </TouchableOpacity>
+  render = () => (
+    <View style={styles.container}>
+      <View style={styles.topContainer}>
+        <View style={styles.carouselContainer}>
+          <Carousel
+            data={sources}
+            renderItem={this.renderSlide}
+            sliderWidth={width}
+            itemWidth={400}
+            inactiveSlideScale={0.94}
+            inactiveSlideOpacity={0.7}
+            onSnapToItem={this.playAnimation}
+          />
         </View>
       </View>
-    );
-  }
+
+      <View style={styles.buttonRow}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Login')}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('SignUp')}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
 }
+
+IntroScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        
+      }),
+    }),
+  }).isRequired,
+};
 
 const styles = {
   container: {
