@@ -20,40 +20,62 @@ class ProfileScreen extends React.Component {
     const navigation = this.props && this.props.navigation;
     const state = navigation && navigation.state;
     const params = state && state.params;
+
     const item = params && params.item;
+    const primaryButtonText = params && params.primaryButtonText;
+    const onPressPrimaryButton = params && params.onPressPrimaryButton;
 
     this.state = {
       item: item || posts[0],
+      primaryButtonText: primaryButtonText || 'Edit Profile',
+      onPressPrimaryButton: onPressPrimaryButton || (navigation && (() => {
+        this.props.navigation.navigate('EditProfile', { item: this.state.item });
+      })),
     };
   }
 
   render() {
-    const { item } = this.state;
+    const { item, primaryButtonText, onPressPrimaryButton } = this.state;
+    const {
+      name, image, bio, banner, followers, following, posts: userPosts,
+    } = item.user;
+
     const { navigate } = this.props.navigation;
 
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.header}>
-          <Image style={styles.headerImage} source={{ uri: item.image }} />
+          <Image style={styles.headerImage} source={{ uri: banner }} />
         </View>
 
         <View style={styles.profilePanel}>
           <View style={styles.topPanel}>
             <View style={styles.profilePictureContainer}>
-              <Image style={styles.profilePicture} source={{ uri: item.image }} />
+              <Image style={styles.profilePicture} source={{ uri: image }} />
             </View>
 
             <View style={styles.statusPanel}>
               <View style={styles.topStatusPanelRow}>
-                <Text style={styles.stats}>1{'\n'}Posts</Text>
-                <Text style={styles.stats}>281{'\n'}Followers</Text>
-                <Text style={styles.stats}>124{'\n'}Following</Text>
+                <View style={styles.stats}>
+                  <Text style={{ fontWeight: 'bold' }}>{userPosts.length}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>Posts</Text>
+                </View>
+
+                <View style={styles.stats}>
+                  <Text style={{ fontWeight: 'bold' }}>{followers}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>Followers</Text>
+                </View>
+
+                <View style={styles.stats}>
+                  <Text style={{ fontWeight: 'bold' }}>{following}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>Following</Text>
+                </View>
               </View>
 
               <View style={styles.bottomStatusPanelRow}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={onPressPrimaryButton}>
                   <View style={styles.editProfileButtonContainer}>
-                    <Text style={styles.editProfileButton}>Edit Profile</Text>
+                    <Text style={styles.editProfileButton}>{primaryButtonText}</Text>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -61,8 +83,8 @@ class ProfileScreen extends React.Component {
           </View>
 
           <View style={styles.bottomPanel}>
-            <Text style={styles.petName}>Roxie</Text>
-            <Text style={styles.petDescription}>{item.user.name}{'\''}s dear dear friend...</Text>
+            <Text style={styles.petName}>{name}</Text>
+            <Text style={styles.petDescription}>{bio}</Text>
           </View>
         </View>
 
@@ -86,11 +108,18 @@ ProfileScreen.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         item: PropTypes.shape({
-          image: PropTypes.string,
           user: PropTypes.shape({
-            name: PropTypes.string,
-          }),
-        }),
+            name: PropTypes.string.isRequired,
+            image: PropTypes.string.isRequired,
+            bio: PropTypes.string.isRequired,
+            banner: PropTypes.string.isRequired,
+            followers: PropTypes.number.isRequired,
+            following: PropTypes.number.isRequired,
+            posts: PropTypes.array.isRequired,
+          }).isRequired,
+        }).isRequired,
+        primaryButtonText: PropTypes.string,
+        onPressPrimaryButton: PropTypes.func,
       }),
     }),
   }),
@@ -140,7 +169,6 @@ const styles = {
   },
   stats: {
     flex: 1,
-    fontWeight: 'bold',
     justifyContent: 'center',
     alignItems: 'center',
   },

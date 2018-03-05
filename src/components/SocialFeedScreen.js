@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, FlatList, View, Text, TouchableOpacity } from 'react-native';
+import { ScrollView, FlatList, View, Text, TouchableOpacity, Alert } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
@@ -30,10 +30,15 @@ class SocialFeedScreen extends React.Component {
     const { isCommented, isLiked } = this.state;
     const { navigate } = this.props.navigation;
     
+    const primaryButtonText = 'Follow';
+    const onPressPrimaryButton = (() =>
+      Alert.alert('Under Construction', 'Following feature to be implemented')
+    );
+
     return (
       <SocialFeedPost
         item={item}
-        onPressProfilePicture={() => navigate('Profile', { item })}
+        onPressProfilePicture={() => navigate('Profile', { item, primaryButtonText, onPressPrimaryButton })}
         onPressPostContent={() => navigate('PostDetail', { item, isCommented, isLiked })}
         isCommented={isCommented}
         isLiked={isLiked}
