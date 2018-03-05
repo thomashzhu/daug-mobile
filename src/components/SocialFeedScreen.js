@@ -1,9 +1,7 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, FlatList, View, Image, Text, TouchableOpacity, Platform, NativeModules } from 'react-native';
+import { ScrollView, FlatList, View, Image, Text, TouchableOpacity } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
-
-const { StatusBarManager } = NativeModules;
 
 const posts = require('../data/posts');
 
@@ -15,6 +13,7 @@ class SocialFeedScreen extends React.Component {
       borderBottomWidth: 0,
     },
     headerTintColor: '#FD746C',
+    // gesturesEnabled: false,
   };
 
   constructor(props) {
@@ -28,12 +27,11 @@ class SocialFeedScreen extends React.Component {
 
   renderPost = ({ item }) => {
     const { isCommented, isLiked } = this.state;
+    const { navigate } = this.props.navigation;
     
     return (
       <View style={styles.postContainer}>
-        <View style={styles.border} />
-
-        <TouchableOpacity style={styles.postHeader} onPress={() => this.props.navigation.navigate('Profile', { item })}>
+        <TouchableOpacity style={styles.postHeader} onPress={() => navigate('Profile', { item })}>
           <Image style={styles.postHeaderIcon} source={{ uri: item.image }} />
           <Text style={styles.postHeaderName}>{item.name}</Text>
         </TouchableOpacity>
@@ -44,7 +42,7 @@ class SocialFeedScreen extends React.Component {
         </View>
 
         <View style={styles.postStatistics}>
-          <Text style={styles.postStatisticsDate}>{item.post.date}</Text>
+          <Text style={{ flex: 1 }}>{item.post.date}</Text>
 
           <TouchableOpacity
             style={styles.postInteractiveButtonContainer}
@@ -74,23 +72,61 @@ class SocialFeedScreen extends React.Component {
             </View>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.border} />
       </View>
     );
   };
 
-  render = () => (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.scrollView}>
-        <FlatList
-          style={styles.list}
-          keyExtractor={(item, index) => index}
-          extraData={this.state}
-          data={posts}
-          renderItem={this.renderPost}
-        />
-      </ScrollView>
-    </SafeAreaView>
-  )
+  render = () => {
+    const { navigate } = this.props.navigation;
+
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={styles.createPostContainer}>
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => navigate('CreatePost')}
+          >
+            <Text style={styles.createPostLinkText}>Create Post</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.createPostIconButton}
+            onPress={() => navigate('CreatePost')}
+          >
+            <SimpleLineIcons
+              name="picture"
+              size={24}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.createPostIconButton}
+            onPress={() => navigate('CreatePost')}
+          >
+            <SimpleLineIcons
+              style={styles.createPostIconButton}
+              name="note"
+              size={24}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.border} />
+
+        <ScrollView style={{ flex: 1 }}>
+          <FlatList
+            style={{ flex: 1 }}
+            keyExtractor={(item, index) => index}
+            extraData={this.state}
+            data={posts}
+            renderItem={this.renderPost}
+          />
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
 SocialFeedScreen.propTypes = {
@@ -105,15 +141,22 @@ SocialFeedScreen.propTypes = {
 };
 
 const styles = {
-  safeArea: {
-    flex: 1,
-    paddingTop: Platform.OS === 'ios' ? 0 : StatusBarManager.HEIGHT,
+  createPostContainer: {
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF',
   },
-  scrollView: {
-    flex: 1,
+  createPostLinkText: {
+    color: '#FD746C',
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft: 12,
   },
-  list: {
-    flex: 1,
+  createPostIconButton: {
+    paddingLeft: 8,
+    paddingRight: 8,
   },
   border: {
     height: 1,
@@ -138,9 +181,6 @@ const styles = {
   postContent: {
     height: 300,
   },
-  postImageContainer: {
-    flex: 1,
-  },
   postImage: {
     resizeMode: 'cover',
     flex: 1,
@@ -155,9 +195,6 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-  },
-  postStatisticsDate: {
-    flex: 1,
   },
   postInteractiveButtonContainer: {
     marginLeft: 8,

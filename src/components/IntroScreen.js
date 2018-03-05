@@ -47,33 +47,37 @@ class IntroScreen extends React.Component {
     />
   );
 
-  render = () => (
-    <View style={styles.container}>
-      <View style={styles.topContainer}>
-        <View style={styles.carouselContainer}>
-          <Carousel
-            data={sources}
-            renderItem={this.renderSlide}
-            sliderWidth={width}
-            itemWidth={400}
-            inactiveSlideScale={0.94}
-            inactiveSlideOpacity={0.7}
-            onSnapToItem={this.playAnimation}
-          />
+  render = () => {
+    const { navigate } = this.props.navigation;
+
+    return (
+      <View style={styles.container}>
+        <View style={styles.topContainer}>
+          <View style={styles.carouselContainer}>
+            <Carousel
+              data={sources}
+              renderItem={this.renderSlide}
+              sliderWidth={width}
+              itemWidth={400}
+              inactiveSlideScale={0.94}
+              inactiveSlideOpacity={0.7}
+              onSnapToItem={this.playAnimation}
+            />
+          </View>
+        </View>
+
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigate('Login')}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => navigate('SignUp')}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
         </View>
       </View>
-
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Login')}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('SignUp')}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  )
+    );
+  }
 }
 
 IntroScreen.propTypes = {

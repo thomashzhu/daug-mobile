@@ -14,4 +14,7 @@ export default StackNavigator({
   initialRouteName: 'IntroStack',
   mode: 'modal',
   headerMode: 'none',
+  navigationOptions: {
+    gesturesEnabled: false,
+  },
 });

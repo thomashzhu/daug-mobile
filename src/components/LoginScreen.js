@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, View, TouchableOpacity, Alert, Keyboard, Text } from 'react-native';
 import { AuthSession } from 'expo';
+import PropTypes from 'prop-types';
 
 import { RoundTextInput } from '../components/common';
 
@@ -33,12 +34,10 @@ class LoginScreen extends React.Component {
     if (email !== '' && password !== '') {
       Keyboard.dismiss();
     
+      const { navigate } = this.props.navigation;
+
       if (email === 'dev@thomaszhu.com' && password === 'rn') {
-        Alert.alert(
-          'Success',
-          'Email: dev@thomaszhu.com\nPassword is "rn"',
-        );
-        this.props.navigation.navigate('HomeTabs');
+        navigate('HomeTabs');
       } else {
         Alert.alert(
           'Failure',
@@ -54,7 +53,9 @@ class LoginScreen extends React.Component {
     });
     if (type === 'success') {
       Keyboard.dismiss();
-      this.props.navigation.navigate('HomeTabs');
+
+      const { navigate } = this.props.navigation;
+      navigate('HomeTabs');
     }
   }
 
@@ -78,7 +79,9 @@ class LoginScreen extends React.Component {
 
     if (result.type === 'success') {
       Keyboard.dismiss();
-      this.props.navigation.navigate('HomeTabs');
+
+      const { navigate } = this.props.navigation;
+      navigate('HomeTabs');
     }
   }
 
@@ -129,6 +132,17 @@ class LoginScreen extends React.Component {
     );
   }
 }
+
+LoginScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        
+      }),
+    }),
+  }).isRequired,
+};
 
 const styles = {
   container: {

@@ -17,15 +17,19 @@ class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    const { navigation } = this.props;
+    const navigation = this.props && this.props.navigation;
+    const state = navigation && navigation.state;
+    const params = state && state.params;
+    const item = params && params.item;
 
     this.state = {
-      item: navigation ? posts[0] : navigation.state.params,
+      item: item || posts[0],
     };
   }
 
   render() {
     const { item } = this.state;
+    const { navigate } = this.props.navigation;
 
     return (
       <View style={{ flex: 1 }}>
@@ -65,7 +69,7 @@ class ProfileScreen extends React.Component {
         <View style={styles.border} />
         
         <View style={styles.personalFeeds}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('IntroStack')}>
+          <TouchableOpacity onPress={() => navigate('IntroStack')}>
             <View style={styles.logoutButtonContainer}>
               <Text style={styles.logoutButton}>LOGOUT</Text>
             </View>

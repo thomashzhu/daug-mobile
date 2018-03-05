@@ -1,6 +1,7 @@
 import React from 'react';
-import { Dimensions, View, TouchableOpacity, Text, Alert, Keyboard } from 'react-native';
+import { Dimensions, View, TouchableOpacity, Text, Keyboard } from 'react-native';
 import { AuthSession } from 'expo';
+import PropTypes from 'prop-types';
 
 import { RoundTextInput } from '../components/common';
 
@@ -33,13 +34,9 @@ class SignUpScreen extends React.Component {
   onSubmitButtonPressed = (name, email, password) => {
     if (name !== '' && email !== '' && password !== '') {
       Keyboard.dismiss();
-      
-      Alert.alert(
-        'Success',
-        'Name: ' + name + '\nEmail: ' + email + '\nPassword: ' + password,
-      );
 
-      this.props.navigation.navigate('HomeTabs');
+      const { navigate } = this.props.navigation;
+      navigate('HomeTabs');
     }
   }
 
@@ -49,7 +46,9 @@ class SignUpScreen extends React.Component {
     });
     if (type === 'success') {
       Keyboard.dismiss();
-      this.props.navigation.navigate('HomeTabs');
+      
+      const { navigate } = this.props.navigation;
+      navigate('HomeTabs');
     }
   }
 
@@ -73,7 +72,9 @@ class SignUpScreen extends React.Component {
 
     if (result.type === 'success') {
       Keyboard.dismiss();
-      this.props.navigation.navigate('HomeTabs');
+
+      const { navigate } = this.props.navigation;
+      navigate('HomeTabs');
     }
   }
 
@@ -132,6 +133,17 @@ class SignUpScreen extends React.Component {
     );
   }
 }
+
+SignUpScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    state: PropTypes.shape({
+      params: PropTypes.shape({
+        
+      }),
+    }),
+  }).isRequired,
+};
 
 const styles = {
   container: {
