@@ -1,11 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import IntroScreen from './src/components/IntroScreen';
+import RootNavigator from './src/navigation/RootNavigator';
 
 const App = () => (
   <View style={styles.container}>
-    <IntroScreen />
+    <RootNavigator />
   </View>
 );
 

@@ -2,18 +2,28 @@ import React from 'react';
 import { Dimensions, View, TouchableOpacity, Alert, Keyboard, Text } from 'react-native';
 import { AuthSession } from 'expo';
 
-import SocialFeedScreen from './SocialFeedScreen';
 import { RoundTextInput } from '../components/common';
 
 const auth0ClientId = 'U1bMTR9reF5bQkeDsfDKvlwQ8C9ozk8v';
 const auth0Domain = 'https://thomashzhu.auth0.com';
 
 class LoginScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Login',
+    headerStyle: {
+      backgroundColor: '#ED8271',
+      borderBottomWidth: 0,
+    },
+    headerTintColor: '#FFF',
+    headerTitleStyle: {
+      color: '#FFF',
+    },
+  };
+
   constructor(props) {
     super(props);
 
     this.state = {
-      screen: 'null',
       email: '',
       password: '',
     };
@@ -28,7 +38,7 @@ class LoginScreen extends React.Component {
           'Success',
           'Email: dev@thomaszhu.com\nPassword is "rn"',
         );
-        this.setState({ screen: 'SocialFeedScreen' });
+        this.props.navigation.navigate('HomeTabs');
       } else {
         Alert.alert(
           'Failure',
@@ -43,7 +53,8 @@ class LoginScreen extends React.Component {
       permissions: ['public_profile'],
     });
     if (type === 'success') {
-      this.setState({ screen: 'SocialFeedScreen' });
+      Keyboard.dismiss();
+      this.props.navigation.navigate('HomeTabs');
     }
   }
 
@@ -65,19 +76,15 @@ class LoginScreen extends React.Component {
       }),
     });
 
-    console.log(result);
     if (result.type === 'success') {
-      this.setState({ screen: 'SocialFeedScreen' });
+      Keyboard.dismiss();
+      this.props.navigation.navigate('HomeTabs');
     }
   }
 
   render() {
-    const { screen, email, password } = this.state;
+    const { email, password } = this.state;
     const isLoginInfoNotEmpty = !(email === '' || password === '');
-
-    if (screen === 'SocialFeedScreen') {
-      return <SocialFeedScreen />;
-    }
 
     return (
       <View style={styles.container}>

@@ -2,8 +2,6 @@ import React from 'react';
 import { View, Image, Text, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 
-import IntroScreen from './IntroScreen';
-
 const posts = require('../data/posts');
 
 class ProfileScreen extends React.Component {
@@ -11,18 +9,13 @@ class ProfileScreen extends React.Component {
     super(props);
 
     this.state = {
-      index: props.index,
-      screen: '',
+      index: props.index || 0,
     };
   }
 
   render() {
-    const { index, screen } = this.state;
+    const { index } = this.state;
     const item = posts[index];
-
-    if (screen === 'IntroScreen') {
-      return <IntroScreen />;
-    }
 
     return (
       <View style={{ flex: 1 }}>
@@ -62,7 +55,7 @@ class ProfileScreen extends React.Component {
         <View style={styles.border} />
         
         <View style={styles.personalFeeds}>
-          <TouchableOpacity onPress={() => this.setState({ screen: 'IntroScreen' })}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('IntroStack')}>
             <View style={styles.logoutButtonContainer}>
               <Text style={styles.logoutButton}>LOGOUT</Text>
             </View>

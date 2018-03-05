@@ -12,7 +12,6 @@ class SocialFeedScreen extends React.Component {
     super(props);
 
     this.state = {
-      screen: '',
       selectedIndex: -1,
       isCommented: false,
       isLiked: false,

@@ -14,6 +14,10 @@ const sources = require('../assets/lotties/intro');
 let isPlayed = false;
 
 class IntroScreen extends React.Component {
+  static navigationOptions = {
+    header: null,
+  };
+
   constructor(props) {
     super(props);
 
@@ -73,11 +77,11 @@ class IntroScreen extends React.Component {
         </View>
 
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.setState({ screen: 'LoginScreen' })}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('Login')}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.setState({ screen: 'SignUpScreen' })}>
+          <TouchableOpacity style={styles.buttonContainer} onPress={() => this.props.navigation.navigate('SignUp')}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
