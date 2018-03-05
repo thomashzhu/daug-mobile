@@ -34,13 +34,13 @@ class ProfileScreen extends React.Component {
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.header}>
-          <Image style={styles.headerImage} source={{ uri: item.post.image }} />
+          <Image style={styles.headerImage} source={{ uri: item.image }} />
         </View>
 
         <View style={styles.profilePanel}>
           <View style={styles.topPanel}>
             <View style={styles.profilePictureContainer}>
-              <Image style={styles.profilePicture} source={{ uri: item.post.image }} />
+              <Image style={styles.profilePicture} source={{ uri: item.image }} />
             </View>
 
             <View style={styles.statusPanel}>
@@ -62,7 +62,7 @@ class ProfileScreen extends React.Component {
 
           <View style={styles.bottomPanel}>
             <Text style={styles.petName}>Roxie</Text>
-            <Text style={styles.petDescription}>{item.name}{'\''}s dear dear friend...</Text>
+            <Text style={styles.petDescription}>{item.user.name}{'\''}s dear dear friend...</Text>
           </View>
         </View>
 
@@ -86,9 +86,9 @@ ProfileScreen.propTypes = {
     state: PropTypes.shape({
       params: PropTypes.shape({
         item: PropTypes.shape({
-          name: PropTypes.string,
-          post: PropTypes.shape({
-            image: PropTypes.string,
+          image: PropTypes.string,
+          user: PropTypes.shape({
+            name: PropTypes.string,
           }),
         }),
       }),
