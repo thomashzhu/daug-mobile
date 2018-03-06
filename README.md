@@ -61,23 +61,75 @@ Social feed screen based on Facebook.
 ### Demo
 <br />Intro Screen (with Carousel)
 <div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Intro_Screen_Slide_1.JPG" width="250" />
-  <img src="screenshots/Intro_Screen_Slide_2.JPG" width="250" />
+  <img src="screenshots/Assignment-1/Intro_Screen_Slide_1.JPG" width="250" />
+  <img src="screenshots/Assignment-1/Intro_Screen_Slide_2.JPG" width="250" />
 </div>
 <br />Login & Sign up
 <div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Login_Screen.JPG" width="250" />
-  <img src="screenshots/Sign_Up_Screen.JPG" width="250" />
+  <img src="screenshots/Assignment-1/Login_Screen.JPG" width="250" />
+  <img src="screenshots/Assignment-1/Sign_Up_Screen.JPG" width="250" />
 </div>
 <br />Facebook & Twitter Auth
 <div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Facebook_Auth.JPG" width="250" />
-  <img src="screenshots/Twitter_Auth.JPG" width="250" />
+  <img src="screenshots/Assignment-1/Facebook_Auth.JPG" width="250" />
+  <img src="screenshots/Assignment-1/Twitter_Auth.JPG" width="250" />
 </div>
 <br />Social Feed & Profile
 <div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Social_Feed.JPG" width="250" />
-  <img src="screenshots/Profile_Screen.JPG" width="250" />
+  <img src="screenshots/Assignment-1/Social_Feed.JPG" width="250" />
+  <img src="screenshots/Assignment-1/Profile_Screen.JPG" width="250" />
+</div>
+
+## Assignment #2
+
+### Objectives
+
+- Learn how to build navigation for Daug app using [React Navigation](https://reactnavigation.org/)
+- Learn mobile design patterns for navigation & screen layouts
+- Learn how to quickly build RN screens and hook them up using navigation
+
+### TODO
+
+- [x] Understand the 3 main navigation patterns for mobile apps:
+  - [x] [StackNavigator](https://reactnavigation.org/docs/hello-react-navigation.html#creating-a-stacknavigator)
+  - [x] [TabNavigator](https://reactnavigation.org/docs/tab-based-navigation.html)
+  - [x] [DrawerNavigator](https://reactnavigation.org/docs/drawer-based-navigation.html)
+- [x] Setup a **IntroStack** (using StackNavigator) for the Intro Screen (root), Login Screen (push) & Sign Up Screen (push)
+- [x] Setup a **HomeTabs** (using TabNavigator) for the Social Feed Screen (default) and Profile Screen
+- [x] Setup a **RootNavigator** (using StackNavigator) with the **IntroStack** & **HomeTabs** with `mode: "modal"`
+- [x] Design & build an Edit Profile Screen
+- [x] Setup a **ProfileStack** (using StackNavigator) for the Profile Screen (root), Post Details Screen (push) & Edit Profile Screen (modal) with mode: "modal" and custom RNE header component
+- [x] Design & build a Post Details Screen
+- [x] Design & build a Create Post Screen
+- [x] Setup a **SocialStack** (using StackNavigator) for the Social Feed Screen (root), Post Details Screen (push) & Create Post Screen (modal) with mode: "modal" and custom RNE header component
+- [x] :star: **Bonus:** Display Posts on ProfileScreen
+- [ ] :star: **Bonus:** Setup a **HomeNavigator**(using DrawerNavigator) with the **HomeTabs** (as root) and update **RootNavigator** to use **HomeNavigator** instead of **HomeTabs**
+- [x] Add working gif of app to `README.MD`
+
+### Demo
+<br />Home Tab and Profile Tab
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/Assignment-2/Home_Tab.JPG" width="250" />
+  <img src="screenshots/Assignment-2/Profile_Tab.JPG" width="250" />
+</div>
+<br />Post Detail Screens
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/Assignment-2/Post_Detail_Screen_1.JPG" width="250" />
+  <img src="screenshots/Assignment-2/Post_Detail_Screen_2.JPG" width="250" />
+</div>
+<br />Modal Screens
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/Assignment-2/Create_Post_Screen.JPG" width="250" />
+  <img src="screenshots/Assignment-2/Edit_Profile_Screen.JPG" width="250" />
+</div>
+<br />
+Miscellaneous (Separate comment and liked status)
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/Assignment-2/Separated_Comment_and_Like_Status.JPG" width="250" />
+</div>
+Miscellaneous (Log out)
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/Assignment-2/Log_Out.JPG" width="250" />
 </div>
 
 ## Submission
