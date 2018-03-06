@@ -7,9 +7,10 @@ class SocialFeedPost extends Component {
   constructor(props) {
     super(props);
 
-    const { isCommented, isLiked } = props;
+    const { navigationDisabled, isCommented, isLiked } = props;
 
     this.state = {
+      navigationDisabled,
       isCommented,
       isLiked,
     };
@@ -17,11 +18,12 @@ class SocialFeedPost extends Component {
 
   render() {
     const { item, onPressProfilePicture, onPressPostContent } = this.props;
-    const { isCommented, isLiked } = this.state;
+    const { navigationDisabled, isCommented, isLiked } = this.state;
 
     return (
       <View>
         <TouchableOpacity
+          disabled={navigationDisabled}
           style={styles.postHeader}
           onPress={onPressProfilePicture}
         >
@@ -30,7 +32,10 @@ class SocialFeedPost extends Component {
         </TouchableOpacity>
   
         <View style={styles.postContent}>
-          <TouchableWithoutFeedback onPress={onPressPostContent}>
+          <TouchableWithoutFeedback
+            disabled={navigationDisabled}
+            onPress={onPressPostContent}
+          >
             <Image style={styles.postImage} source={{ uri: item.image }} />
           </TouchableWithoutFeedback>
           <Text style={styles.postCaption}>{item.caption}</Text>
@@ -87,10 +92,12 @@ SocialFeedPost.propTypes = {
   onPressPostContent: PropTypes.func,
   isCommented: PropTypes.bool.isRequired,
   isLiked: PropTypes.bool.isRequired,
+  navigationDisabled: PropTypes.bool,
 };
 
 SocialFeedPost.defaultProps = {
   onPressPostContent: null,
+  navigationDisabled: false,
 };
 
 const styles = StyleSheet.create({

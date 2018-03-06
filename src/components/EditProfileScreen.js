@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, SafeAreaView, Platform, NativeModules, ScrollView, TouchableOpacity, Text, View, Image, TextInput } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, NativeModules, ScrollView, TouchableOpacity, Text, View, Image } from 'react-native';
 import PropTypes from 'prop-types';
 
 import Header from './common/Header';
@@ -20,7 +20,9 @@ class EditProfileScreen extends Component {
   }
   render() {
     const { goBack } = this.props.navigation;
-    const { name, image, bio } = this.state;
+    const {
+      name, image, bio, email,
+    } = this.state;
 
     return (
       <SafeAreaView style={styles.safeAreaView}>
@@ -57,13 +59,13 @@ class EditProfileScreen extends Component {
               <CaptionTextInput
                 caption="Name"
                 onChangeText={({ text }) => this.setState({ name: text })}
-                value={this.state.name}
+                value={name}
               />
               
               <CaptionTextInput
                 caption="Bio"
                 onChangeText={({ text }) => this.setState({ bio: text })}
-                value={this.state.bio}
+                value={bio}
               />
             </View>
 
@@ -73,7 +75,7 @@ class EditProfileScreen extends Component {
               <CaptionTextInput
                 caption="Email"
                 onChangeText={({ text }) => this.setState({ email: text })}
-                value={this.state.email}
+                value={email}
               />
             </View>
           </ScrollView>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { ScrollView, FlatList, View, Text, TouchableOpacity, Alert } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
-import SocialFeedPost from './common/SocialFeedPost';
+import SocialFeedList from './common/SocialFeedList';
 
 const posts = require('../data/posts');
 
@@ -15,35 +15,6 @@ class SocialFeedScreen extends React.Component {
       borderBottomWidth: 0,
     },
     headerTintColor: '#FD746C',
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isCommented: false,
-      isLiked: false,
-    };
-  }
-
-  renderPost = ({ item }) => {
-    const { isCommented, isLiked } = this.state;
-    const { navigate } = this.props.navigation;
-    
-    const primaryButtonText = 'Follow';
-    const onPressPrimaryButton = (() =>
-      Alert.alert('Under Construction', 'Following feature to be implemented')
-    );
-
-    return (
-      <SocialFeedPost
-        item={item}
-        onPressProfilePicture={() => navigate('Profile', { item, primaryButtonText, onPressPrimaryButton })}
-        onPressPostContent={() => navigate('PostDetail', { item, isCommented, isLiked })}
-        isCommented={isCommented}
-        isLiked={isLiked}
-      />
-    );
   };
 
   render = () => {
@@ -84,12 +55,9 @@ class SocialFeedScreen extends React.Component {
         <View style={styles.border} />
 
         <ScrollView style={{ flex: 1 }}>
-          <FlatList
-            style={{ flex: 1 }}
-            keyExtractor={(item, index) => index}
-            extraData={this.state}
-            data={posts}
-            renderItem={this.renderPost}
+          <SocialFeedList
+            posts={posts}
+            navigation={this.props.navigation}
           />
         </ScrollView>
       </View>

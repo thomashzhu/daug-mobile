@@ -2,10 +2,12 @@ import React from 'react';
 import { View } from 'react-native';
 
 import RootNavigator from './src/navigation/RootNavigator';
+import HomeTabs from './src/navigation/HomeTabs';
 
 const App = () => (
   <View style={styles.container}>
-    <RootNavigator />
+    {/* <RootNavigator /> */}
+    <HomeTabs />
   </View>
 );
 

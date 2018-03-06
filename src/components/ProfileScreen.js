@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TouchableOpacity, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
+
+import SocialFeedList from './common/SocialFeedList';
 
 const posts = require('../data/posts');
 
@@ -34,6 +36,17 @@ class ProfileScreen extends React.Component {
     };
   }
 
+  transformPosts = (userPosts, item) => {
+    const { name } = item.user;
+
+    return userPosts ? userPosts.map((post) => {
+      const tempPost = post;
+      tempPost.user = {};
+      tempPost.user.name = name;
+      return tempPost;
+    }) : [];
+  }
+
   render() {
     const { item, primaryButtonText, onPressPrimaryButton } = this.state;
     const {
@@ -43,7 +56,7 @@ class ProfileScreen extends React.Component {
     const { navigate } = this.props.navigation;
 
     return (
-      <View style={{ flex: 1 }}>
+      <ScrollView style={{ flexDirection: 'column' }}>
         <View style={styles.header}>
           <Image style={styles.headerImage} source={{ uri: banner }} />
         </View>
@@ -57,7 +70,7 @@ class ProfileScreen extends React.Component {
             <View style={styles.statusPanel}>
               <View style={styles.topStatusPanelRow}>
                 <View style={styles.stats}>
-                  <Text style={{ fontWeight: 'bold' }}>{userPosts.length}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{userPosts ? userPosts.length : 0}</Text>
                   <Text style={{ fontWeight: 'bold' }}>Posts</Text>
                 </View>
 
@@ -90,6 +103,12 @@ class ProfileScreen extends React.Component {
 
         <View style={styles.border} />
         
+        <SocialFeedList
+          navigationDisabled
+          posts={this.transformPosts(userPosts, item)}
+          navigation={this.props.navigation}
+        />
+
         <View style={styles.personalFeeds}>
           <TouchableOpacity onPress={() => navigate('IntroStack')}>
             <View style={styles.logoutButtonContainer}>
@@ -97,7 +116,7 @@ class ProfileScreen extends React.Component {
             </View>
           </TouchableOpacity>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -115,7 +134,7 @@ ProfileScreen.propTypes = {
             banner: PropTypes.string.isRequired,
             followers: PropTypes.number.isRequired,
             following: PropTypes.number.isRequired,
-            posts: PropTypes.array.isRequired,
+            posts: PropTypes.array,
           }).isRequired,
         }).isRequired,
         primaryButtonText: PropTypes.string,
@@ -212,6 +231,8 @@ const styles = {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 18,
+    marginBottom: 18,
   },
   logoutButtonContainer: {
     height: 48,
