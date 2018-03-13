@@ -88,13 +88,13 @@ class ProfileScreen extends React.Component {
       name, bio, profile_image: profileImage, banner_image: bannerImage,
     } = (isCurrentUser ? loggedInUser : selectedUser);
     
+    const { navigate } = this.props.navigation;
+
     const primaryButtonText = (isCurrentUser ? 'Edit Profile' : 'Following');
     const onPressPrimaryButton = (isCurrentUser ?
-      () => { this.props.navigation.navigate('EditProfile', { item: loggedInUser }); } :
+      () => { navigate('EditProfile'); } :
       () => { Alert.alert('Feature to be implemented'); }
     );
-
-    const { navigate } = this.props.navigation;
 
     return (
       <ScrollView style={{ flexDirection: 'column' }}>

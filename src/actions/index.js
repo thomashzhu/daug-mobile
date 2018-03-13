@@ -4,6 +4,7 @@ import {
   USER_LOGGED_IN,
   USER_SELECTED,
   USER_DISMISSED,
+  USER_UPDATED,
   POST_SELECTED,
 } from './types';
 
@@ -27,6 +28,11 @@ export const selectUser = user => (
 
 export const dismissUser = () => ({
   type: USER_DISMISSED,
+});
+
+export const updateUser = user => ({
+  type: USER_UPDATED,
+  payload: user,
 });
 
 export const selectPost = post => (

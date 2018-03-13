@@ -2,6 +2,7 @@ import {
   USER_LOGGED_IN,
   USER_SELECTED,
   USER_DISMISSED,
+  USER_UPDATED,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -17,6 +18,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, selectedUser: action.payload };
     case USER_DISMISSED:
       return { ...state, selectedUser: null };
+    case USER_UPDATED:
+      return { ...state, loggedInUser: action.payload };
     default:
       return state;
   }
