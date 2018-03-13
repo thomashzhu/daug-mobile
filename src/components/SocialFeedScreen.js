@@ -1,10 +1,9 @@
 import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, Alert } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
 import SocialFeedList from './common/SocialFeedList';
-import LoadingIndicator from './common/LoadingIndicator';
 
 const fetch = require('node-fetch');
 
@@ -36,27 +35,40 @@ class SocialFeedScreen extends React.Component {
 
     try {
       const response = await fetch('https://daug-app.herokuapp.com/api/posts/all');
+      const responseJSON = await response.json();
 
       if (response.status === 200) {
-        const responseJSON = await response.json();
-        
         this.setState({ isLoading: false, posts: responseJSON });
       } else {
-        responseJSON = await response.json();
+        this.setState({ isLoading: false });
+
         const error = responseJSON.message;
-
-        console.log(responseJSON);
-
-        this.setState({ isLoading: false, errors: responseJSON.errors });
         Alert.alert('Loading posts failed!', `Unable to load posts. ${error}!`);
       }
     } catch (error) {
-      this.setState({ isLoading: false, response: error });
-
-      console.log(error);
+      this.setState({ isLoading: false });
 
       Alert.alert('Loading posts failed!', 'Unable to load posts. Please try again later');
     }
+  }
+
+  renderPost = () => {
+    if (this.state.isLoading) {
+      return (
+        <ActivityIndicator
+          style={{ justifyContent: 'center' }}
+          size="large"
+        />
+      );
+    }
+
+    return (
+      <ScrollView style={{ flex: 1 }}>
+        <SocialFeedList
+          posts={this.state.posts}
+        />
+      </ScrollView>
+    );
   }
 
   render = () => {
@@ -96,14 +108,7 @@ class SocialFeedScreen extends React.Component {
 
         <View style={styles.border} />
 
-        <ScrollView style={{ flex: 1 }}>
-          <SocialFeedList
-            posts={this.state.posts}
-            navigation={this.props.navigation}
-          />
-        </ScrollView>
-
-        <LoadingIndicator visible={this.state.isLoading} />
+        {this.renderPost()}
       </View>
     );
   }

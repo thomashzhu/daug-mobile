@@ -1,7 +1,7 @@
 import RoundTextInput from './RoundTextInput';
-import LoadingIndicator from './LoadingIndicator';
+import LoadingModal from './LoadingModal';
 
 module.exports = {
   RoundTextInput,
-  LoadingIndicator,
+  LoadingModal,
 };

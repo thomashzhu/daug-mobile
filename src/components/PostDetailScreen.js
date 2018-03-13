@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, Text, FlatList, View, Image } from 'react-native';
+import { StyleSheet, ScrollView, Text, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import SocialFeedPost from './common/SocialFeedPost';
 
@@ -14,39 +15,34 @@ class PostDetailScreen extends Component {
     headerTintColor: '#FD746C',
   };
 
-  renderComment = ({ item: comment }) => {
-    const { content, user } = comment;
-    const { name: username, image: userPicture } = user;
+  // renderComment = ({ item: comment }) => {
+  //   const { content, user } = comment;
+  //   const { name: username, image: userPicture } = user;
 
-    return (
-      <View style={styles.commentContainer}>
-        <Image
-          style={styles.commentAuthorPicture}
-          source={{ uri: userPicture }}
-        />
+  //   return (
+  //     <View style={styles.commentContainer}>
+  //       <Image
+  //         style={styles.commentAuthorPicture}
+  //         source={{ uri: userPicture }}
+  //       />
 
-        <View style={styles.commentInfoContainer}>
-          <Text style={{ flex: 1 }}>{username}</Text>
-          <Text style={styles.comment}>{content}</Text>
-        </View>
-      </View>
-    );
-  }
+  //       <View style={styles.commentInfoContainer}>
+  //         <Text style={{ flex: 1 }}>{username}</Text>
+  //         <Text style={styles.comment}>{content}</Text>
+  //       </View>
+  //     </View>
+  //   );
+  // }
 
   render() {
-    const { navigation } = this.props;
-    const { navigate } = navigation;
-    const { item, isCommented, isLiked } = navigation.state.params;
-
-    const { comments } = item;
+    const { selectedPost } = this.props.post;
+    const comments = [];
 
     return (
       <ScrollView>
         <SocialFeedPost
-          item={item}
-          onPressProfilePicture={() => navigate('Profile', { item })}
-          isCommented={isCommented}
-          isLiked={isLiked}
+          item={selectedPost}
+          navigationDisabled
         />
 
         <Text style={styles.commentHeader}>
@@ -65,29 +61,10 @@ class PostDetailScreen extends Component {
 }
 
 PostDetailScreen.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        item: PropTypes.shape({
-          image: PropTypes.string.isRequired,
-          caption: PropTypes.string.isRequired,
-          date: PropTypes.string.isRequired,
-          user: PropTypes.shape({
-            name: PropTypes.string.isRequired,
-          }).isRequired,
-          comments: PropTypes.arrayOf(PropTypes.shape({
-            content: PropTypes.string.isRequired,
-            user: PropTypes.shape({
-              name: PropTypes.string.isRequired,
-              image: PropTypes.string.isRequired,
-            }).isRequired,
-          })),
-        }).isRequired,
-        isCommented: PropTypes.bool.isRequired,
-        isLiked: PropTypes.bool.isRequired,
-      }),
-    }),
+  post: PropTypes.shape({
+    selectedPost: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    }).isRequired,
   }).isRequired,
 };
 
@@ -124,4 +101,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostDetailScreen;
+const mapStateToProps = state => ({
+  post: state.post,
+});
+
+export default connect(mapStateToProps)(PostDetailScreen);

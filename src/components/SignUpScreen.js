@@ -1,9 +1,9 @@
 import React from 'react';
-import { Dimensions, View, TouchableOpacity, Text, Keyboard, Alert } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, View, TouchableOpacity, Text, Keyboard, Alert } from 'react-native';
 import Expo, { AuthSession } from 'expo';
 import PropTypes from 'prop-types';
 
-import { RoundTextInput, LoadingIndicator } from '../components/common';
+import { RoundTextInput, LoadingModal } from '../components/common';
 
 const fetch = require('node-fetch');
 
@@ -31,8 +31,6 @@ class SignUpScreen extends React.Component {
       email: '',
       password: '',
       isLoading: false,
-      response: '',
-      error: '',
     };
   }
 
@@ -61,32 +59,23 @@ class SignUpScreen extends React.Component {
         body: formBody,
       });
 
-      let responseJSON = null;
+      const responseJSON = await response.json();
 
       if (response.status === 201) {
-        responseJSON = await response.json();
-
-        console.log(responseJSON);
-
         this.setState({ isLoading: false });
 
         const { navigate } = this.props.navigation;
         navigate('HomeTabs');
       } else {
-        responseJSON = await response.json();
+        this.setState({ isLoading: false });
+
         const error = responseJSON.message;
-
-        console.log(responseJSON);
-
-        this.setState({ isLoading: false, errors: responseJSON.errors });
-        Alert.alert('Sign up failed!', `Unable to signup. ${error}!`);
+        Alert.alert('Sign up failed!', `Unable to Signup. ${error}!`);
       }
     } catch (error) {
-      this.setState({ isLoading: false, response: error });
+      this.setState({ isLoading: false });
 
-      console.log(error);
-
-      Alert.alert('Sign up failed!', 'Unable to Signup. Please try again later')
+      Alert.alert('Sign up failed!', 'Unable to Signup. Please try again later');
     }
   }
 
@@ -139,7 +128,7 @@ class SignUpScreen extends React.Component {
       (name && this.validateEmail(email) && password.length >= 8);
 
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <View style={styles.textInputContainer}>
           <RoundTextInput
             iconName="user"
@@ -167,28 +156,30 @@ class SignUpScreen extends React.Component {
         </View>
 
         <TouchableOpacity
-          style={[styles.button, isSignUpInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
+          style={[styles.loginButton, isSignUpInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
           onPress={() => isSignUpInfoNotEmpty && this.onSubmitButtonPressed(name, email, password)}
         >
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: '#29ABEC' }]}
-          onPress={this.fbLogIn}
-        >
-          <Text style={styles.buttonText}>Facebook</Text>
-        </TouchableOpacity>
+        <View style={styles.socialButtonRow}>
+          <TouchableOpacity
+            style={[styles.socialButton, { backgroundColor: '#29ABEC' }]}
+            onPress={this.fbLogIn}
+          >
+            <Text style={styles.buttonText}>Facebook</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: '#29ABEC' }]}
-          onPress={this.twitterLogIn}
-        >
-          <Text style={styles.buttonText}>Twitter</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.socialButton, { backgroundColor: '#29ABEC' }]}
+            onPress={this.twitterLogIn}
+          >
+            <Text style={styles.buttonText}>Twitter</Text>
+          </TouchableOpacity>
+        </View>
 
-        <LoadingIndicator visible={this.state.isLoading} />
-      </View>
+        <LoadingModal visible={this.state.isLoading} />
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -209,11 +200,10 @@ const styles = {
   textInputContainer: {
     height: 204,
   },
-  button: {
-    flexDirection: 'row',
+  loginButton: {
     marginTop: 18,
     height: 36,
-    width: Dimensions.get('window').width * 0.56,
+    width: Dimensions.get('window').width * 0.6,
     backgroundColor: '#808080',
     justifyContent: 'center',
     alignItems: 'center',
@@ -221,6 +211,19 @@ const styles = {
   buttonText: {
     color: 'white',
     fontSize: 14,
+  },
+  socialButton: {
+    backgroundColor: '#808080',
+    width: Dimensions.get('window').width * 0.28,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  socialButtonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 18,
+    height: 36,
+    width: Dimensions.get('window').width * 0.6,
   },
 };
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Modal, View, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
 
-const LoadingIndicator = props => (
+const LoadingModal = props => (
   <Modal
     animationType="fade"
     transparent
@@ -15,7 +15,7 @@ const LoadingIndicator = props => (
   </Modal>
 );
 
-LoadingIndicator.propTypes = {
+LoadingModal.propTypes = {
   visible: PropTypes.bool.isRequired,
 };
 
@@ -27,4 +27,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoadingIndicator;
+export default LoadingModal;

@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { StyleSheet, View, TouchableOpacity, Image, Text, TouchableWithoutFeedback, Alert } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
+import { selectUser, selectPost } from '../../actions';
+import { timeSince } from '../../utils/Helpers';
 
 const fetch = require('node-fetch');
 
@@ -9,16 +13,10 @@ class SocialFeedPost extends Component {
   constructor(props) {
     super(props);
 
-    const { navigationDisabled, isCommented, isLiked } = props;
-
     this.state = {
-      user: {
-        name: '',
-        profile_image: '',
-      },
-      navigationDisabled,
-      isCommented,
-      isLiked,
+      user: null,
+      isCommented: false,
+      isLiked: false,
     };
   }
 
@@ -28,32 +26,25 @@ class SocialFeedPost extends Component {
 
   fetchUserData = async () => {
     try {
-      const { userId } = this.props.item;
-      const response = await fetch(`https://daug-app.herokuapp.com/api/users/${userId}`);
+      const { item } = this.props;
+
+      const response = await fetch(`https://daug-app.herokuapp.com/api/users/${item.userId}`);
+      const responseJSON = await response.json();
 
       if (response.status === 200) {
-        const responseJSON = await response.json();
-
         this.setState({ user: responseJSON });
       } else {
-        responseJSON = await response.json();
         const error = responseJSON.message;
-
-        console.log(responseJSON);
-
         Alert.alert('Loading user failed!', `Unable to obtain user data. ${error}!`);
       }
     } catch (error) {
-      this.setState({ isLoading: false, response: error });
-
-      console.log(error);
-
-      Alert.alert('Loading user failed!', 'Please try again later');
+      Alert.alert(`Loading user failed!', 'Please try again later. ${error}!`);
     }
   }
 
   renderUserProfilePicture = () => {
-    const { profile_image: profileImage } = this.state.user;
+    const { user } = this.state;
+    const profileImage = (user ? user.profile_image : null);
 
     if (profileImage) {
       return <Image style={styles.postHeaderIcon} source={{ uri: profileImage }} />;
@@ -62,14 +53,13 @@ class SocialFeedPost extends Component {
   }
 
   renderImage = () => {
-    const { item, onPressPostContent } = this.props;
-    const { navigationDisabled } = this.state;
+    const { item, navigationDisabled } = this.props;
 
-    if (item.image) {
+    if (item) {
       return (
         <TouchableWithoutFeedback
           disabled={navigationDisabled}
-          onPress={onPressPostContent}
+          onPress={() => this.props.selectPost(item)}
         >
           <Image style={styles.postImage} source={{ uri: item.image }} />
         </TouchableWithoutFeedback>
@@ -88,18 +78,18 @@ class SocialFeedPost extends Component {
   }
 
   render() {
-    const { item, onPressProfilePicture } = this.props;
-    const { navigationDisabled, isCommented, isLiked } = this.state;
+    const { item, navigationDisabled } = this.props;
+    const { user, isCommented, isLiked } = this.state;
 
     return (
       <View>
         <TouchableOpacity
           disabled={navigationDisabled}
           style={styles.postHeader}
-          onPress={onPressProfilePicture}
+          onPress={() => this.props.selectUser(user)}
         >
           {this.renderUserProfilePicture()}
-          <Text style={styles.postHeaderName}>{this.state.user.name}</Text>
+          <Text style={styles.postHeaderName}>{user ? user.name : ''}</Text>
         </TouchableOpacity>
   
         <View style={{ height: item.image ? 300 : 100 }}>
@@ -108,7 +98,7 @@ class SocialFeedPost extends Component {
         </View>
   
         <View style={styles.postStatistics}>
-          <Text style={{ flex: 1 }}>{item.createdAt}</Text>
+          <Text style={{ flex: 1 }}>{timeSince(new Date(item.createdAt))}</Text>
   
           <TouchableOpacity
             style={styles.postInteractiveButtonContainer}
@@ -154,16 +144,9 @@ SocialFeedPost.propTypes = {
     updatedAt: PropTypes.string.isRequired,
     userId: PropTypes.number.isRequired,
   }).isRequired,
-  onPressProfilePicture: PropTypes.func.isRequired,
-  onPressPostContent: PropTypes.func,
-  isCommented: PropTypes.bool.isRequired,
-  isLiked: PropTypes.bool.isRequired,
-  navigationDisabled: PropTypes.bool,
-};
-
-SocialFeedPost.defaultProps = {
-  onPressPostContent: null,
-  navigationDisabled: false,
+  navigationDisabled: PropTypes.bool.isRequired,
+  selectUser: PropTypes.func.isRequired,
+  selectPost: PropTypes.func.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -219,4 +202,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SocialFeedPost;
+const mapDispatchToProps = {
+  selectUser,
+  selectPost,
+};
+
+export default connect(null, mapDispatchToProps)(SocialFeedPost);

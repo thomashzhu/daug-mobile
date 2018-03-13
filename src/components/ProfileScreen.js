@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Image, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Image, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
+import { dismissUser } from '../actions';
 import SocialFeedList from './common/SocialFeedList';
 
-const posts = require('../data/posts');
+const fetch = require('node-fetch');
 
 class ProfileScreen extends React.Component {
   static navigationOptions = {
@@ -15,72 +17,111 @@ class ProfileScreen extends React.Component {
     },
     headerTintColor: '#FD746C',
   };
-  
+
   constructor(props) {
     super(props);
 
-    const navigation = this.props && this.props.navigation;
-    const state = navigation && navigation.state;
-    const params = state && state.params;
-
-    const item = params && params.item;
-    const primaryButtonText = params && params.primaryButtonText;
-    const onPressPrimaryButton = params && params.onPressPrimaryButton;
+    const { selectedUser, loggedInUser } = this.props.user;
+    const isCurrentUser = (!selectedUser || selectedUser.id === loggedInUser.id);
 
     this.state = {
-      item: item || posts[0],
-      primaryButtonText: primaryButtonText || 'Edit Profile',
-      onPressPrimaryButton: onPressPrimaryButton || (navigation && (() => {
-        this.props.navigation.navigate('EditProfile', { item: this.state.item });
-      })),
+      isLoading: false,
+      isCurrentUser,
+      posts: isCurrentUser ? [] : loggedInUser.posts,
     };
   }
 
-  transformPosts = (userPosts, item) => {
-    const { name } = item.user;
+  componentDidMount() {
+    if (this.state.isCurrentUser) {
+      this.fetchPosts(this.props.user.loggedInUser.id);
+    }
+  }
 
-    return userPosts ? userPosts.map((post) => {
-      const tempPost = post;
-      tempPost.user = {};
-      tempPost.user.name = name;
-      return tempPost;
-    }) : [];
+  componentWillUnmount() {
+    this.props.dismissUser();
+  }
+
+  fetchPosts = async (userId) => {
+    this.setState({ isLoading: true });
+
+    try {
+      const response = await fetch(`https://daug-app.herokuapp.com/api/users/${userId}`);
+      const responseJSON = await response.json();
+
+      if (response.status === 200) {
+        this.setState({ isLoading: false, posts: responseJSON.posts });
+      } else {
+        this.setState({ isLoading: false });
+
+        const error = responseJSON.message;
+        Alert.alert('Loading posts failed!', `Unable to load posts. ${error}!`);
+      }
+    } catch (error) {
+      this.setState({ isLoading: false });
+      
+      Alert.alert('Loading posts failed!', 'Unable to load posts. Please try again later');
+    }
+  }
+
+  renderPosts = () => {
+    if (this.state.isLoading) {
+      return (
+        <ActivityIndicator
+          style={{ justifyContent: 'center' }}
+          size="large"
+        />
+      );
+    }
+
+    return (
+      <SocialFeedList
+        navigationDisabled
+        posts={this.state.posts}
+      />
+    );
   }
 
   render() {
-    const { item, primaryButtonText, onPressPrimaryButton } = this.state;
+    const { selectedUser, loggedInUser } = this.props.user;
+    const { isCurrentUser, posts } = this.state;
     const {
-      name, image, bio, banner, followers, following, posts: userPosts,
-    } = item.user;
+      name, bio, profile_image: profileImage, banner_image: bannerImage,
+    } = (isCurrentUser ? loggedInUser : selectedUser);
+    
+    const primaryButtonText = (isCurrentUser ? 'Edit Profile' : 'Following');
+    const onPressPrimaryButton = (isCurrentUser ?
+      () => { this.props.navigation.navigate('EditProfile', { item: loggedInUser }); } :
+      () => { Alert.alert('Feature to be implemented'); }
+    );
 
     const { navigate } = this.props.navigation;
 
     return (
       <ScrollView style={{ flexDirection: 'column' }}>
         <View style={styles.header}>
-          <Image style={styles.headerImage} source={{ uri: banner }} />
+          <Image style={styles.headerImage} source={{ uri: bannerImage }} />
         </View>
 
         <View style={styles.profilePanel}>
           <View style={styles.topPanel}>
             <View style={styles.profilePictureContainer}>
-              <Image style={styles.profilePicture} source={{ uri: image }} />
+              <Image style={styles.profilePicture} source={{ uri: profileImage }} />
             </View>
 
             <View style={styles.statusPanel}>
               <View style={styles.topStatusPanelRow}>
                 <View style={styles.stats}>
-                  <Text style={{ fontWeight: 'bold' }}>{userPosts ? userPosts.length : 0}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{posts ? posts.length : 0}</Text>
                   <Text style={{ fontWeight: 'bold' }}>Posts</Text>
                 </View>
 
                 <View style={styles.stats}>
-                  <Text style={{ fontWeight: 'bold' }}>{followers}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>100</Text>
                   <Text style={{ fontWeight: 'bold' }}>Followers</Text>
                 </View>
 
                 <View style={styles.stats}>
-                  <Text style={{ fontWeight: 'bold' }}>{following}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>50</Text>
                   <Text style={{ fontWeight: 'bold' }}>Following</Text>
                 </View>
               </View>
@@ -97,17 +138,13 @@ class ProfileScreen extends React.Component {
 
           <View style={styles.bottomPanel}>
             <Text style={styles.petName}>{name}</Text>
-            <Text style={styles.petDescription}>{bio}</Text>
+            <Text style={styles.petDescription}>{bio === 'null' ? 'Nothing yet...' : bio}</Text>
           </View>
         </View>
 
         <View style={styles.border} />
         
-        <SocialFeedList
-          navigationDisabled
-          posts={this.transformPosts(userPosts, item)}
-          navigation={this.props.navigation}
-        />
+        {this.renderPosts()}
 
         <View style={styles.personalFeeds}>
           <TouchableOpacity onPress={() => navigate('IntroStack')}>
@@ -124,28 +161,21 @@ class ProfileScreen extends React.Component {
 ProfileScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        item: PropTypes.shape({
-          user: PropTypes.shape({
-            name: PropTypes.string.isRequired,
-            image: PropTypes.string.isRequired,
-            bio: PropTypes.string.isRequired,
-            banner: PropTypes.string.isRequired,
-            followers: PropTypes.number.isRequired,
-            following: PropTypes.number.isRequired,
-            posts: PropTypes.array,
-          }).isRequired,
-        }).isRequired,
-        primaryButtonText: PropTypes.string,
-        onPressPrimaryButton: PropTypes.func,
-      }),
+  }).isRequired,
+  user: PropTypes.shape({
+    loggedInUser: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    }).isRequired,
+    selectedUser: PropTypes.shape({
+      createdAt: PropTypes.string.isRequired,
+      description: PropTypes.string,
+      id: PropTypes.number.isRequired,
+      image: PropTypes.string,
+      updatedAt: PropTypes.string.isRequired,
+      userId: PropTypes.number,
     }),
-  }),
-};
-
-ProfileScreen.defaultProps = {
-  navigation: null,
+  }).isRequired,
+  dismissUser: PropTypes.func.isRequired,
 };
 
 const styles = {
@@ -248,4 +278,12 @@ const styles = {
   },
 };
 
-export default ProfileScreen;
+const mapStateToProps = state => ({
+  user: state.user,
+});
+
+const mapDispatchToProps = {
+  dismissUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileScreen);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, Alert } from 'react-native';
+import { FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 
 import SocialFeedPost from './SocialFeedPost';
@@ -8,14 +8,8 @@ class SocialFeedList extends Component {
   constructor(props) {
     super(props);
 
-    const { posts, navigationDisabled } = props;
-
-    this.state = {
-      posts,
-      navigationDisabled,
-      isCommented: false,
-      isLiked: false,
-    };
+    const { posts } = props;
+    this.state = { posts };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -23,23 +17,12 @@ class SocialFeedList extends Component {
   }
 
   renderPost = ({ item }) => {
-    const { navigate } = this.props.navigation;
-
-    const { navigationDisabled, isCommented, isLiked } = this.state;
-
-    const primaryButtonText = 'Follow';
-    const onPressPrimaryButton = (() =>
-      Alert.alert('Under Construction', 'Following feature to be implemented')
-    );
+    const { navigationDisabled } = this.props;
 
     return (
       <SocialFeedPost
         item={item}
         navigationDisabled={navigationDisabled}
-        onPressProfilePicture={() => navigate('Profile', { item, primaryButtonText, onPressPrimaryButton })}
-        onPressPostContent={() => navigate('PostDetail', { item, isCommented, isLiked })}
-        isCommented={isCommented}
-        isLiked={isLiked}
       />
     );
   };
@@ -67,14 +50,14 @@ SocialFeedList.propTypes = {
     updatedAt: PropTypes.string.isRequired,
     userId: PropTypes.number.isRequired,
   })),
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
   navigationDisabled: PropTypes.bool,
 };
 
 SocialFeedList.defaultProps = {
   posts: [],
+};
+
+SocialFeedList.defaultProps = {
   navigationDisabled: false,
 };
 

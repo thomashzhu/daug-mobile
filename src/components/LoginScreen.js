@@ -1,9 +1,11 @@
 import React from 'react';
-import { Dimensions, View, TouchableOpacity, Alert, Keyboard, Text } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, View, TouchableOpacity, Alert, Keyboard, Text } from 'react-native';
 import Expo, { AuthSession } from 'expo';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-import { RoundTextInput, LoadingIndicator } from '../components/common';
+import { RoundTextInput, LoadingModal } from '../components/common';
+import { userLoggedIn } from '../actions';
 
 const fetch = require('node-fetch');
 
@@ -63,30 +65,23 @@ class LoginScreen extends React.Component {
           body: formBody,
         });
 
-        let responseJSON = null;
+        const responseJSON = await response.json();
 
         if (response.status === 201) {
-          responseJSON = await response.json();
-
-          console.log(responseJSON);
+          this.props.userLoggedIn(responseJSON.user);
 
           this.setState({ isLoading: false });
           navigate('HomeTabs');
         } else {
-          responseJSON = await response.json();
+          this.setState({ isLoading: false });
+          
           const error = responseJSON.message;
-
-          console.log(responseJSON);
-
-          this.setState({ isLoading: false, errors: responseJSON.errors });
           Alert.alert('Log in failed!', `Unable to Login. ${error}!`);
         }
       } catch (error) {
-        this.setState({ isLoading: false, response: error });
-
-        console.log(error);
-
-        Alert.alert('Log in failed!', 'Unable to Login. Please try again later')
+        this.setState({ isLoading: false });
+        
+        Alert.alert('Log in failed!', 'Unable to Login. Please try again later');
       }
     }
   }
@@ -139,7 +134,7 @@ class LoginScreen extends React.Component {
       (this.validateEmail(email) && password.length >= 8);
 
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <View style={styles.textInputContainer}>
           <RoundTextInput
             iconName="envelope-open"
@@ -180,8 +175,8 @@ class LoginScreen extends React.Component {
           <Text style={styles.buttonText}>Twitter</Text>
         </TouchableOpacity>
 
-        <LoadingIndicator visible={this.state.isLoading} />
-      </View>
+        <LoadingModal visible={this.state.isLoading} />
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -190,6 +185,7 @@ LoginScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
+  userLoggedIn: PropTypes.func.isRequired,
 };
 
 const styles = {
@@ -217,4 +213,8 @@ const styles = {
   },
 };
 
-export default LoginScreen;
+const mapDispatchToProps = {
+  userLoggedIn,
+};
+
+export default connect(null, mapDispatchToProps)(LoginScreen);
