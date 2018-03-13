@@ -1,9 +1,11 @@
 import React from 'react';
-import { Dimensions, View, TouchableOpacity, Text, Keyboard } from 'react-native';
-import { AuthSession } from 'expo';
+import { Dimensions, View, TouchableOpacity, Text, Keyboard, Alert } from 'react-native';
+import Expo, { AuthSession } from 'expo';
 import PropTypes from 'prop-types';
 
-import { RoundTextInput } from '../components/common';
+import { RoundTextInput, LoadingIndicator } from '../components/common';
+
+const fetch = require('node-fetch');
 
 const auth0ClientId = 'U1bMTR9reF5bQkeDsfDKvlwQ8C9ozk8v';
 const auth0Domain = 'https://thomashzhu.auth0.com';
@@ -28,17 +30,70 @@ class SignUpScreen extends React.Component {
       name: '',
       email: '',
       password: '',
+      isLoading: false,
+      response: '',
+      error: '',
     };
   }
 
-  onSubmitButtonPressed = (name, email, password) => {
-    if (name !== '' && email !== '' && password !== '') {
-      Keyboard.dismiss();
+  onSubmitButtonPressed = async (name, email, password) => {
+    this.setState({ isLoading: true });
 
-      const { navigate } = this.props.navigation;
-      navigate('HomeTabs');
+    const details = { name, email, password };
+
+    let formBody = [];
+
+    for (var property in details) {
+      const encodedKey = encodeURIComponent(property);
+      const encodedValue = encodeURIComponent(details[property]);
+
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+
+    formBody = formBody.join('&');
+
+    try {
+      const response = await fetch('https://daug-app.herokuapp.com/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        },
+        body: formBody,
+      });
+
+      let responseJSON = null;
+
+      if (response.status === 201) {
+        responseJSON = await response.json();
+
+        console.log(responseJSON);
+
+        this.setState({ isLoading: false });
+
+        const { navigate } = this.props.navigation;
+        navigate('HomeTabs');
+      } else {
+        responseJSON = await response.json();
+        const error = responseJSON.message;
+
+        console.log(responseJSON);
+
+        this.setState({ isLoading: false, errors: responseJSON.errors });
+        Alert.alert('Sign up failed!', `Unable to signup. ${error}!`);
+      }
+    } catch (error) {
+      this.setState({ isLoading: false, response: error });
+
+      console.log(error);
+
+      Alert.alert('Sign up failed!', 'Unable to Signup. Please try again later')
     }
   }
+
+  validateEmail = (email) => {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  };
 
   fbLogIn = async () => {
     const { type } = await Expo.Facebook.logInWithReadPermissionsAsync('170311167091859', {
@@ -52,22 +107,21 @@ class SignUpScreen extends React.Component {
     }
   }
 
-  toQueryString = (params) => {
-    return '?' + Object.entries(params)
-      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-      .join('&');
-  }
-
   twitterLogIn = async () => {
     const redirectUrl = AuthSession.getRedirectUrl();
+    const params = {
+      connection: 'twitter',
+      client_id: auth0ClientId,
+      response_type: 'token',
+      scope: 'openid name',
+      redirect_uri: redirectUrl,
+    };
+    const queryString = Object.entries(params)
+      .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+      .join('&');
+
     const result = await AuthSession.startAsync({
-      authUrl: `${auth0Domain}/authorize` + this.toQueryString({
-        connection: 'twitter',
-        client_id: auth0ClientId,
-        response_type: 'token',
-        scope: 'openid name',
-        redirect_uri: redirectUrl,
-      }),
+      authUrl: `${auth0Domain}/authorize?${queryString}`,
     });
 
     if (result.type === 'success') {
@@ -81,7 +135,8 @@ class SignUpScreen extends React.Component {
   render() {
     const { name, email, password } = this.state;
 
-    const isSignUpInfoNotEmpty = !(email === '' || password === '');
+    const isSignUpInfoNotEmpty =
+      (name && this.validateEmail(email) && password.length >= 8);
 
     return (
       <View style={styles.container}>
@@ -98,6 +153,7 @@ class SignUpScreen extends React.Component {
             placeholder="Email"
             value={this.state.email}
             textDidChange={(text) => { this.setState({ email: text }); }}
+            error={!email || this.validateEmail(email) ? '' : 'Invalid email'}
           />
 
           <RoundTextInput
@@ -105,30 +161,33 @@ class SignUpScreen extends React.Component {
             placeholder="Password"
             value={this.state.password}
             textDidChange={(text) => { this.setState({ password: text }); }}
+            error={!password || password.length >= 8 ? '' : 'Password must be at least 8 characters.'}
             isPassword
           />
         </View>
 
         <TouchableOpacity
-          style={[styles.backgroundContainer, isSignUpInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
-          onPress={() => this.onSubmitButtonPressed(name, email, password)}
+          style={[styles.button, isSignUpInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
+          onPress={() => isSignUpInfoNotEmpty && this.onSubmitButtonPressed(name, email, password)}
         >
-          <Text style={styles.submitButton}>Sign Up</Text>
+          <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.backgroundContainer, { backgroundColor: '#29ABEC' }]}
+          style={[styles.button, { backgroundColor: '#29ABEC' }]}
           onPress={this.fbLogIn}
         >
-          <Text style={styles.submitButton}>Facebook</Text>
+          <Text style={styles.buttonText}>Facebook</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.backgroundContainer, { backgroundColor: '#29ABEC' }]}
+          style={[styles.button, { backgroundColor: '#29ABEC' }]}
           onPress={this.twitterLogIn}
         >
-          <Text style={styles.submitButton}>Twitter</Text>
+          <Text style={styles.buttonText}>Twitter</Text>
         </TouchableOpacity>
+
+        <LoadingIndicator visible={this.state.isLoading} />
       </View>
     );
   }
@@ -137,11 +196,6 @@ class SignUpScreen extends React.Component {
 SignUpScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
-    state: PropTypes.shape({
-      params: PropTypes.shape({
-        
-      }),
-    }),
   }).isRequired,
 };
 
@@ -155,18 +209,18 @@ const styles = {
   textInputContainer: {
     height: 204,
   },
-  backgroundContainer: {
+  button: {
     flexDirection: 'row',
-    marginTop: 24,
-    height: 48,
+    marginTop: 18,
+    height: 36,
     width: Dimensions.get('window').width * 0.56,
     backgroundColor: '#808080',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  submitButton: {
+  buttonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 14,
   },
 };
 

@@ -1,60 +1,134 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView, Platform, NativeModules, TouchableOpacity, View, Text, Image, TextInput } from 'react-native';
+import React, { Component } from 'react';
+import { StyleSheet, SafeAreaView, Platform, NativeModules, TouchableOpacity, View, Text, Image, TextInput, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import { SimpleLineIcons } from '@expo/vector-icons';
 
 import Header from './common/Header';
 
-const CreatePostScreen = (props) => {
-  const { goBack } = props.navigation;
+class CreatePostScreen extends Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <SafeAreaView style={styles.safeAreaView}>
-      <Header
-        headerLeft={() => (
-          <TouchableOpacity onPress={() => goBack()}>
-            <Text style={styles.headerButton}>Cancel</Text>
-          </TouchableOpacity>
-        )}
-        title="Create Post"
-        headerRight={() => (
-          <TouchableOpacity onPress={() => goBack()}>
-            <Text style={styles.headerButton}>Share</Text>
-          </TouchableOpacity>
-        )}
-      />
+    this.state = { text: '' };
+  }
+  
+  onSubmitButtonPressed = async () => {
+    this.setState({ isLoading: true });
 
-      <View style={styles.postInformationContainer}>
-        <Image
-          style={styles.profilePicture}
-          source={{ uri: 'https://images.pexels.com/photos/356378/pexels-photo-356378.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb' }}
+    // const { name, email, password } = this.state
+    const { navigate } = this.props.navigation
+
+    var post = {
+      'description': this.state.text
+    };
+
+    var formBody = [];
+
+    for (var property in post) {
+      var encodedKey = encodeURIComponent(property);
+      var encodedValue = encodeURIComponent(post[property]);
+
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+
+    formBody = formBody.join('&');
+
+    try {
+      const response = await fetch(`https://daug-app.herokuapp.com/api/users/7/posts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: formBody,
+      });
+
+      let responseJSON = null
+
+      if (response.status === 201) {
+        responseJSON = await response.json();
+
+        console.log(responseJSON);
+
+        this.setState({ isLoading: false })
+        Alert.alert(
+          'Signed Up!',
+          'You have successfully signed up!',
+          [
+            { text: 'Continue', onPress: () => navigate('SocialFeed') },
+          ],
+          { cancelable: false },
+        )
+      } else {
+        responseJSON = await response.json();
+        const error = responseJSON.message
+
+        console.log(responseJSON);
+
+        this.setState({ isLoading: false, errors: responseJSON.errors })
+        Alert.alert('Sign up failed!', `Unable to signup.. ${error}!`)
+      }
+    } catch (error) {
+      this.setState({ isLoading: false, response: error });
+
+      console.log(error);
+
+      Alert.alert('Sign up failed!', 'Unable to Signup. Please try again later')
+    }
+  }
+
+  render = () => {
+    const { goBack } = this.props.navigation;
+
+    return (
+      <SafeAreaView style={styles.safeAreaView}>
+        <Header
+          headerLeft={() => (
+            <TouchableOpacity onPress={() => goBack()}>
+              <Text style={styles.headerButton}>Cancel</Text>
+            </TouchableOpacity>
+          )}
+          title="Create Post"
+          headerRight={() => (
+            <TouchableOpacity onPress={() => this.onSubmitButtonPressed()}>
+              <Text style={styles.headerButton}>Share</Text>
+            </TouchableOpacity>
+          )}
         />
 
-        <View style={{ flex: 1 }}>
-          <Text style={styles.author}>Roxie</Text>
+        <View style={styles.postInformationContainer}>
+          <Image
+            style={styles.profilePicture}
+            source={{ uri: 'https://images.pexels.com/photos/356378/pexels-photo-356378.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb' }}
+          />
 
-          <TouchableOpacity style={styles.locationContainer}>
-            <SimpleLineIcons
-              name="location-pin"
-              size={12}
-            />
-            <Text style={styles.location}>Add Location</Text>
-          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.author}>Roxie</Text>
+
+            <TouchableOpacity style={styles.locationContainer}>
+              <SimpleLineIcons
+                name="location-pin"
+                size={12}
+              />
+              <Text style={styles.location}>Add Location</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.contentContainer}>
-        <TextInput
-          style={styles.content}
-          multiline
-          placeholder="What's on your mind?"
-          placeholderTextColor="#DDD"
-          underlineColorAndroid="rgba(0,0,0,0)"
-        />
-      </View>
-    </SafeAreaView>
-  );
-};
+        <View style={styles.contentContainer}>
+          <TextInput
+            style={styles.content}
+            multiline
+            placeholder="What's on your mind?"
+            placeholderTextColor="#DDD"
+            onChangeText={text => this.setState({ text })}
+            value={this.state.text}
+            underlineColorAndroid="rgba(0,0,0,0)"
+          />
+        </View>
+      </SafeAreaView>
+    );
+  };
+}
 
 CreatePostScreen.propTypes = {
   navigation: PropTypes.shape({

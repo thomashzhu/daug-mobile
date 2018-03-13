@@ -1,8 +1,10 @@
 import React from 'react';
-import { Dimensions, View, Text, TouchableOpacity } from 'react-native';
+import { Dimensions, View, Text, TouchableOpacity, Alert } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { DangerZone } from 'expo';
 import PropTypes from 'prop-types';
+
+const fetch = require('node-fetch');
 
 const { width } = Dimensions.get('window');
 const { Lottie } = DangerZone;
@@ -21,6 +23,24 @@ class IntroScreen extends React.Component {
     this.state = {
       animations: [],
     };
+  }
+
+  async componentDidMount() {
+    this.pingServer();
+  }
+
+  pingServer = async () => {
+    try {
+      const response = await fetch('https://daug-app.herokuapp.com/api', {
+        method: 'GET',
+      });
+
+      if (response.status !== 200) {
+        Alert.alert('ERROR', 'Server request failed.');
+      }
+    } catch (error) {
+      Alert.alert('ERROR', `Server is down ${error}`);
+    }
   }
 
   playAnimation = (index) => {
