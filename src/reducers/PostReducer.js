@@ -1,6 +1,7 @@
 import { POST_SELECTED } from '../actions/types';
 
 const INITIAL_STATE = {
+  postAdded: false,
   selectedPost: null,
 };
 

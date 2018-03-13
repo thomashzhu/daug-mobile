@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Alert, ActivityIndicator, DeviceEventEmitter } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
@@ -28,6 +28,10 @@ class SocialFeedScreen extends React.Component {
 
   componentDidMount() {
     this.fetchPosts();
+
+    DeviceEventEmitter.addListener('postCreated', () => {
+      this.fetchPosts();
+    });
   }
 
   fetchPosts = async () => {

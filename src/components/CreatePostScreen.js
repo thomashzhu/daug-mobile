@@ -1,25 +1,36 @@
 import React, { Component } from 'react';
-import { StyleSheet, SafeAreaView, Platform, NativeModules, TouchableOpacity, View, Text, Image, TextInput, Alert } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, NativeModules, TouchableOpacity, View, Text, Image, TextInput, Alert, DeviceEventEmitter } from 'react-native';
 import PropTypes from 'prop-types';
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { connect } from 'react-redux';
 
 import Header from './common/Header';
+import LoadingModal from './common/LoadingModal';
+
+const fetch = require('node-fetch');
 
 class CreatePostScreen extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { text: '' };
+    this.state = {
+      isLoading: false,
+      text: '',
+    };
   }
   
   onSubmitButtonPressed = async () => {
     this.setState({ isLoading: true });
 
-    // const { name, email, password } = this.state
-    const { navigate } = this.props.navigation
+    const { id: userId } = this.props.user.loggedInUser;
+    const now = new Date();
 
-    var post = {
-      'description': this.state.text
+    const post = {
+      description: this.state.text,
+      image: 'https://www.amazon.com/Rubies-Hot-Dog-Costume-Medium/dp/B00CJQ4JBO',
+      createdAt: now,
+      updatedAt: now,
+      userId,
     };
 
     var formBody = [];
@@ -32,51 +43,40 @@ class CreatePostScreen extends Component {
     }
 
     formBody = formBody.join('&');
-
+    
     try {
-      const response = await fetch(`https://daug-app.herokuapp.com/api/users/7/posts`, {
+      const response = await fetch(`https://daug-app.herokuapp.com/api/users/${userId}/posts`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         },
         body: formBody,
       });
 
-      let responseJSON = null
+      const responseJSON = this.setState({ isLoading: false });
 
       if (response.status === 201) {
-        responseJSON = await response.json();
+        this.setState({ isLoading: false });
 
-        console.log(responseJSON);
+        DeviceEventEmitter.emit('postCreated');
 
-        this.setState({ isLoading: false })
-        Alert.alert(
-          'Signed Up!',
-          'You have successfully signed up!',
-          [
-            { text: 'Continue', onPress: () => navigate('SocialFeed') },
-          ],
-          { cancelable: false },
-        )
+        const { navigate } = this.props.navigation;
+        navigate('SocialFeed');
       } else {
-        responseJSON = await response.json();
-        const error = responseJSON.message
+        this.setState({ isLoading: false });
 
-        console.log(responseJSON);
-
-        this.setState({ isLoading: false, errors: responseJSON.errors })
-        Alert.alert('Sign up failed!', `Unable to signup.. ${error}!`)
+        const error = responseJSON.message;
+        Alert.alert('Create post failed!', `Unable to create post. ${error}!`);
       }
     } catch (error) {
-      this.setState({ isLoading: false, response: error });
+      this.setState({ isLoading: false });
 
-      console.log(error);
-
-      Alert.alert('Sign up failed!', 'Unable to Signup. Please try again later')
+      Alert.alert('Create post failed!', 'Unable to create post. Please try again later');
     }
   }
 
   render = () => {
+    const { name } = this.props.user.loggedInUser;
     const { goBack } = this.props.navigation;
 
     return (
@@ -102,7 +102,7 @@ class CreatePostScreen extends Component {
           />
 
           <View style={{ flex: 1 }}>
-            <Text style={styles.author}>Roxie</Text>
+            <Text style={styles.author}>{name}</Text>
 
             <TouchableOpacity style={styles.locationContainer}>
               <SimpleLineIcons
@@ -125,6 +125,8 @@ class CreatePostScreen extends Component {
             underlineColorAndroid="rgba(0,0,0,0)"
           />
         </View>
+
+        <LoadingModal visible={this.state.isLoading} />
       </SafeAreaView>
     );
   };
@@ -133,6 +135,12 @@ class CreatePostScreen extends Component {
 CreatePostScreen.propTypes = {
   navigation: PropTypes.shape({
     goBack: PropTypes.func.isRequired,
+  }).isRequired,
+  user: PropTypes.shape({
+    loggedInUser: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
   }).isRequired,
 };
 
@@ -188,4 +196,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreatePostScreen;
+const mapStateToProps = state => ({
+  user: state.user,
+  post: state.post,
+});
+
+export default connect(mapStateToProps)(CreatePostScreen);
