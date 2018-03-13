@@ -18,6 +18,10 @@ class SocialFeedList extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ posts: nextProps.posts });
+  }
+
   renderPost = ({ item }) => {
     const { navigate } = this.props.navigation;
 
@@ -56,12 +60,12 @@ class SocialFeedList extends Component {
 
 SocialFeedList.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.shape({
+    createdAt: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    id: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,
-    caption: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
-    user: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-    }).isRequired,
+    updatedAt: PropTypes.string.isRequired,
+    userId: PropTypes.number.isRequired,
   })),
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
