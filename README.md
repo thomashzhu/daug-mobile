@@ -181,7 +181,7 @@ Miscellaneous (Log out)
 - [x] Add working gif of app to `README.MD`
 
 ### Demo
-![assignment_3](https://github.com/thomashzhu/daug-mobile/tree/master/screenshots/Assignment-3.gif)
+![assignment_3](https://raw.githubusercontent.com/thomashzhu/daug-mobile/master/screenshots/Assignment-3.gif)
 
 ## Submission
 
