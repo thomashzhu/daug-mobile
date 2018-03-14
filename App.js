@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { AsyncStorage, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { Provider, connect } from 'react-redux';
@@ -14,6 +14,8 @@ import reducers from './src/reducers';
 
 import RootNavigator from './src/navigation/RootNavigator';
 
+let isLoggedIn = false;
+
 class Root extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
@@ -23,6 +25,26 @@ class Root extends Component {
       })).isRequired,
     }).isRequired,
   };
+
+  componentWillMount() {
+    this.readLoginData()
+      .then(() => { isLoggedIn = true; })
+      .catch(() => { isLoggedIn = false; });
+  }
+
+  readLoginData = () => (
+    new Promise((resolve, reject) => {
+      AsyncStorage.getItem('loggedInUser')
+        .then((value) => {
+          if (value !== null) {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
+        .catch(error => reject(error));
+    })
+  );
 
   render = () => {
     const { dispatch, rootNavigation } = this.props;
@@ -57,3 +79,4 @@ const App = () => {
 };
 
 export default App;
+export const isUserLoggedIn = isLoggedIn;

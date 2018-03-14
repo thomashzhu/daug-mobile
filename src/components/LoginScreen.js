@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, KeyboardAvoidingView, View, TouchableOpacity, Alert, Keyboard, Text } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, View, TouchableOpacity, Alert, Keyboard, Text, AsyncStorage } from 'react-native';
 import Expo, { AuthSession } from 'expo';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -69,6 +69,12 @@ class LoginScreen extends React.Component {
 
         if (response.status === 201) {
           this.props.userLoggedIn(responseJSON.user);
+
+          try {
+            await AsyncStorage.setItem('loggedInUser', JSON.stringify(responseJSON.user));
+          } catch (error) {
+            // Error saving data
+          }
 
           this.setState({ isLoading: false });
           navigate('HomeTabs');

@@ -1,8 +1,10 @@
 import React from 'react';
-import { ScrollView, View, Text, TouchableOpacity, Alert, ActivityIndicator, DeviceEventEmitter } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, Alert, ActivityIndicator, DeviceEventEmitter, AsyncStorage } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
+import { userLoggedIn } from '../actions';
 import SocialFeedList from './common/SocialFeedList';
 
 const fetch = require('node-fetch');
@@ -26,6 +28,20 @@ class SocialFeedScreen extends React.Component {
     };
   }
 
+  componentWillMount() {
+    this.readLoginData()
+      .then((value) => {
+        if (value) {
+          this.props.userLoggedIn(value);
+        } else {
+          Alert.alert("Failed to retrieve the current user's information.");
+        }
+      })
+      .catch((error) => {
+        Alert.alert(`Failed to retrieve the current user's information. ${error}`);
+      });
+  }
+
   componentDidMount() {
     this.fetchPosts();
 
@@ -33,6 +49,20 @@ class SocialFeedScreen extends React.Component {
       this.fetchPosts();
     });
   }
+
+  readLoginData = () => (
+    new Promise((resolve, reject) => {
+      AsyncStorage.getItem('loggedInUser')
+        .then((value) => {
+          if (value !== null) {
+            resolve(JSON.parse(value));
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(error => reject(error));
+    })
+  );
 
   fetchPosts = async () => {
     this.setState({ isLoading: true });
@@ -122,6 +152,7 @@ SocialFeedScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
+  userLoggedIn: PropTypes.func.isRequired,
 };
 
 const styles = {
@@ -148,4 +179,8 @@ const styles = {
   },
 };
 
-export default SocialFeedScreen;
+const mapDispatchToProps = {
+  userLoggedIn,
+};
+
+export default connect(null, mapDispatchToProps)(SocialFeedScreen);
