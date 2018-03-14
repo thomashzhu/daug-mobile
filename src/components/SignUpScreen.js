@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, KeyboardAvoidingView, View, TouchableOpacity, Text, Keyboard, Alert } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, View, TouchableOpacity, Text, Keyboard, Alert, AsyncStorage } from 'react-native';
 import Expo, { AuthSession } from 'expo';
 import PropTypes from 'prop-types';
 
@@ -63,6 +63,12 @@ class SignUpScreen extends React.Component {
 
       if (response.status === 201) {
         this.setState({ isLoading: false });
+
+        try {
+          await AsyncStorage.setItem('loggedInUser', JSON.stringify(responseJSON.user));
+        } catch (error) {
+          // Error saving data
+        }
 
         const { navigate } = this.props.navigation;
         navigate('HomeTabs');

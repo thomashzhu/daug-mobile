@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, SafeAreaView, Platform, NativeModules, Alert, ScrollView, TouchableOpacity, Text, View, Image } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, NativeModules, Alert, ScrollView, TouchableOpacity, Text, View, Image, AsyncStorage, DeviceEventEmitter } from 'react-native';
+import { ImagePicker } from 'expo';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { RNS3 } from 'react-native-aws3';
 
 import { updateUser } from '../actions';
 
@@ -64,7 +66,17 @@ class EditProfileScreen extends Component {
       if (response.status === 200) {
         this.setState({ isLoading: false });
 
+        try {
+          await AsyncStorage.setItem('loggedInUser', JSON.stringify(responseJSON));
+        } catch (error) {
+          // Error saving data
+        }
+
         this.props.updateUser(responseJSON);
+
+        DeviceEventEmitter.emit('updatedProfile', { id });
+        DeviceEventEmitter.emit('postCreated');
+        
         const { goBack } = this.props.navigation;
         goBack();
       } else {
@@ -78,6 +90,42 @@ class EditProfileScreen extends Component {
 
       Alert.alert('Update user failed!', 'Unable to update user information. Please try again later');
     }
+  }
+
+  takeAndUploadPhotoAsync = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+  
+    if (result.cancelled) {
+      return;
+    }
+  
+    const { uri } = result;
+    const name = uri.split('/').pop();
+  
+    const match = /\.(\w+)$/.exec(name);
+    const type = match ? `image/${match[1]}` : 'image';
+  
+    const picture = { uri, name, type };
+  
+    const options = {
+      keyPrefix: 'uploads/',
+      bucket: 'daug',
+      region: 'us-east-1',
+      accessKey: 'AKIAIKG2UJ7AHBKJ5N2Q',
+      secretKey: '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',
+      successActionStatus: 201,
+    };
+
+    RNS3.put(picture, options).then((response) => {
+      if (response.status === 201) {
+        this.setState({ profileImage: response.body.postResponse.location });
+      } else {
+        Alert.alert('Failed to upload picture.');
+      }
+    });
   }
 
   render() {
@@ -113,7 +161,7 @@ class EditProfileScreen extends Component {
                   source={{ uri: profileImage }}
                 />
                 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => this.takeAndUploadPhotoAsync()}>
                   <Text style={styles.changePhotoButton}>Change Photo</Text>
                 </TouchableOpacity>
               </View>

@@ -17,7 +17,7 @@ class CreatePostScreen extends Component {
 
     this.state = {
       isLoading: false,
-      image: 'https://daug.s3.amazonaws.com/uploads%2F8C5FEC47-F1E5-4CFE-B6BA-FD536122793E.jpg',
+      image: '',
       description: '',
     };
   }

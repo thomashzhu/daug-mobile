@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { View, Image, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator, DeviceEventEmitter, AsyncStorage } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -35,6 +35,10 @@ class ProfileScreen extends React.Component {
     if (this.state.isCurrentUser) {
       this.fetchPosts(this.props.user.loggedInUser.id);
     }
+
+    DeviceEventEmitter.addListener('updatedProfile', ({ id }) => {
+      this.fetchPosts(id);
+    });
   }
 
   componentWillUnmount() {
@@ -61,6 +65,17 @@ class ProfileScreen extends React.Component {
       
       Alert.alert('Loading posts failed!', 'Unable to load posts. Please try again later');
     }
+  }
+
+  logout = async () => {
+    try {
+      await AsyncStorage.removeItem('loggedInUser');
+    } catch (error) {
+      // Error saving data
+    }
+
+    const { navigate } = this.props.navigation;
+    navigate('IntroStack');
   }
 
   renderBanner = (bannerImage) => {
@@ -159,7 +174,7 @@ class ProfileScreen extends React.Component {
         {this.renderPosts()}
 
         <View style={styles.personalFeeds}>
-          <TouchableOpacity onPress={() => navigate('IntroStack')}>
+          <TouchableOpacity onPress={() => this.logout()}>
             <View style={styles.logoutButtonContainer}>
               <Text style={styles.logoutButton}>LOGOUT</Text>
             </View>

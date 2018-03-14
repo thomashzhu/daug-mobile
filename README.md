@@ -132,6 +132,57 @@ Miscellaneous (Log out)
   <img src="screenshots/Assignment-2/Log_Out.JPG" width="250" />
 </div>
 
+## Assignment #3
+
+### Objectives
+
+- Learn how to make backend API calls and User Authentication
+- Learn how to setup and use Redux and AsyncStorage
+- Serve as an React Native app that you can showcase on your porfolio
+
+#### URL: [https://daug-app.herokuapp.com](https://daug-app.herokuapp.com)
+
+### API
+
+- `/api` => `GET` => Used to check API endpoint status
+  	- `/users/all` => `GET` => Lists of all users
+  	- `/posts/all` => `GET` => Lists of all posts
+  	- `/users/:userId` => `GET` => Returns a user
+  	- `/users/:userId` => `PUT` => Updates a user
+  	- `/posts/:postId` => `GET` => Returns a post
+  	- `/posts/:postId` => `POST` => Creates a post
+  	- `/posts/:postId` => `PUT` => Updates a post
+  	- `/posts/:postId` => `DELETE` => Deletes a post
+  	- `/feed` => `GET` => Returns the Social Feed
+- `/auth` => `GET` => Used to check AUTH endpoint status
+  - `/signup` => `POST` = `( name, email, password )` => Used to create a new user
+  - `/login` => `POST` = `( email, password )` => Used to validate an existing user
+
+### TODO
+
+- [x] Intro Screen - Make simple **`GET`** request to **`/api`** to check server status
+- [x] Signup Screen - Make **`POST`** request to **`/auth/signup`** to create a new user
+	- [x] :star: **Bonus:** Add UI validation to Signup Screen - name (not null), email (format) & password (min. 8 characters)
+- [x] Login Screen - Make **`POST`** request to **`/auth/login`** to validate and login an existing user
+	- [x] :star: **Bonus:** Add UI validation to Login Screen - email (format) & password (min. 8 characters)
+- [x] Social Feed Screen - Make **`GET`** request to **`/api/feed/`** to get all posts for social feed
+	- [x] :star: **Bonus:** Use `ActivityIndicator` to show placeholder loading when fetching feed data
+	- [x] :star: **Bonus:** Use `DeviceEventEmitter` to trigger fetching posts when the `new_post_created` event is emitted
+	- [x] :star: **Bonus:** Use `timeSince()` utility function to show relative times for post creation
+- [x] Create Post Screen - Make **`POST`** request to **`/api/users/:userId/posts`** to create a new post by the user
+	- [x] :star: **Bonus:** Use `DeviceEventEmitter` to emit `new_post_created` event once post is created
+- [x] Profile Screen - Make **`GET`** request to **`/api/users/:userId`** to get all the profile data
+	- [x] :star: **Bonus:** Use `ActivityIndicator` to show placeholder loading when fetching profile data
+	- [x] :star: **Bonus:** Use `DeviceEventEmitter` to trigger fetching profile data when the `user_profile_updated` event is emitted
+- [x] Edit Profile Screen - Make **`PUT`** request to **`/api/users/:userId`** to update a user's profile information
+	- [x] :star: **Bonus:** Use `DeviceEventEmitter` to emit `user_profile_updated` event once user data is updated
+- [x] Setup Authentication flow for app using `AsyncStorage`. Once the user has logged in then take them to home page each time they open the app again
+- [x] Use Redux to share state between tab bar & screens
+- [x] Add working gif of app to `README.MD`
+
+### Demo
+![assignment_3](https://github.com/thomashzhu/daug-mobile/tree/master/screenshots/Assignment-3.gif)
+
 ## Submission
 
 Once you have completed the assignment, please create a new issue on this repo with the title as your name and add the link to your repo in the description. One of the TA's will review your code and add your name to the list of completed submissions below if all looks good.

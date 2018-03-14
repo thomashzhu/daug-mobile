@@ -90,7 +90,7 @@ class SocialFeedScreen extends React.Component {
     if (this.state.isLoading) {
       return (
         <ActivityIndicator
-          style={{ justifyContent: 'center' }}
+          style={styles.loadingIndicator}
           size="large"
         />
       );
@@ -156,6 +156,10 @@ SocialFeedScreen.propTypes = {
 };
 
 const styles = {
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   createPostContainer: {
     height: 50,
     flexDirection: 'row',
