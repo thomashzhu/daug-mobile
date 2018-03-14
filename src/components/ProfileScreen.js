@@ -63,6 +63,20 @@ class ProfileScreen extends React.Component {
     }
   }
 
+  renderBanner = (bannerImage) => {
+    if (!bannerImage) {
+      return <View style={{ height: 90 }} />;
+    }
+    return (
+      <View style={styles.header}>
+        <Image
+          style={styles.headerImage}
+          source={{ uri: bannerImage }}
+        />
+      </View>
+    );
+  }
+
   renderPosts = () => {
     if (this.state.isLoading) {
       return (
@@ -98,9 +112,7 @@ class ProfileScreen extends React.Component {
 
     return (
       <ScrollView style={{ flexDirection: 'column' }}>
-        <View style={styles.header}>
-          <Image style={styles.headerImage} source={{ uri: bannerImage }} />
-        </View>
+        {this.renderBanner(bannerImage)}
 
         <View style={styles.profilePanel}>
           <View style={styles.topPanel}>

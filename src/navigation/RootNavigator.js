@@ -13,7 +13,7 @@ export default StackNavigator({
     screen: HomeTabs,
   },
 }, {
-  initialRouteName: isUserLoggedIn ? 'HomeTabs' : 'IntroStack',
+  initialRouteName: (isUserLoggedIn ? 'HomeTabs' : 'IntroStack'),
   mode: 'modal',
   headerMode: 'none',
   navigationOptions: {

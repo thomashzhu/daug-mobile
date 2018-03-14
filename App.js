@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Alert } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { Provider, connect } from 'react-redux';
@@ -26,10 +26,24 @@ class Root extends Component {
     }).isRequired,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      checkedLoggedIn: false,
+    };
+  }
+
   componentWillMount() {
     this.readLoginData()
-      .then(() => { isLoggedIn = true; })
-      .catch(() => { isLoggedIn = false; });
+      .then((success) => {
+        isLoggedIn = success;
+        this.setState({ checkedLoggedIn: true });
+      })
+      .catch(() => {
+        isLoggedIn = false;
+        this.setState({ checkedLoggedIn: true });
+      });
   }
 
   readLoginData = () => (
@@ -55,6 +69,10 @@ class Root extends Component {
       state: rootNavigation,
       addListener,
     });
+
+    if (!this.state.checkedLoggedIn) {
+      return null;
+    }
 
     return <RootNavigator navigation={navigation} />;
   }

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { StyleSheet, SafeAreaView, Platform, NativeModules, TouchableOpacity, View, Text, Image, TextInput, Alert, DeviceEventEmitter } from 'react-native';
+import { ImagePicker } from 'expo';
 import PropTypes from 'prop-types';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
+import { RNS3 } from 'react-native-aws3';
 
 import Header from './common/Header';
 import LoadingModal from './common/LoadingModal';
@@ -15,7 +17,8 @@ class CreatePostScreen extends Component {
 
     this.state = {
       isLoading: false,
-      text: '',
+      image: 'https://daug.s3.amazonaws.com/uploads%2F8C5FEC47-F1E5-4CFE-B6BA-FD536122793E.jpg',
+      description: '',
     };
   }
   
@@ -25,9 +28,10 @@ class CreatePostScreen extends Component {
     const { id: userId } = this.props.user.loggedInUser;
     const now = new Date();
 
+    const { image, description } = this.state;
     const post = {
-      description: this.state.text,
-      image: 'https://www.amazon.com/Rubies-Hot-Dog-Costume-Medium/dp/B00CJQ4JBO',
+      description,
+      image,
       createdAt: now,
       updatedAt: now,
       userId,
@@ -53,7 +57,7 @@ class CreatePostScreen extends Component {
         body: formBody,
       });
 
-      const responseJSON = this.setState({ isLoading: false });
+      const responseJSON = await this.setState({ isLoading: false });
 
       if (response.status === 201) {
         this.setState({ isLoading: false });
@@ -75,9 +79,66 @@ class CreatePostScreen extends Component {
     }
   }
 
+  takeAndUploadPhotoAsync = async () => {
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+  
+    if (result.cancelled) {
+      return;
+    }
+  
+    const { uri } = result;
+    const name = uri.split('/').pop();
+  
+    const match = /\.(\w+)$/.exec(name);
+    const type = match ? `image/${match[1]}` : 'image';
+  
+    const picture = { uri, name, type };
+  
+    const options = {
+      keyPrefix: 'uploads/',
+      bucket: 'daug',
+      region: 'us-east-1',
+      accessKey: 'AKIAIKG2UJ7AHBKJ5N2Q',
+      secretKey: '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',
+      successActionStatus: 201,
+    };
+
+    RNS3.put(picture, options).then((response) => {
+      if (response.status === 201) {
+        this.setState({ image: response.body.postResponse.location });
+      } else {
+        Alert.alert('Failed to upload picture.');
+      }
+    });
+  }
+
+  renderImage = () => {
+    const { image } = this.state;
+
+    if (image) {
+      return (
+        <Image
+          style={styles.picture}
+          source={{ uri: image }}
+        />
+      );
+    }
+
+    return (
+      <SimpleLineIcons
+        name="camera"
+        size={48}
+      />
+    );
+  }
+
   render = () => {
-    const { name } = this.props.user.loggedInUser;
+    const { name, profile_image: profileImage } = this.props.user.loggedInUser;
     const { goBack } = this.props.navigation;
+    const { description } = this.state;
 
     return (
       <SafeAreaView style={styles.safeAreaView}>
@@ -98,7 +159,7 @@ class CreatePostScreen extends Component {
         <View style={styles.postInformationContainer}>
           <Image
             style={styles.profilePicture}
-            source={{ uri: 'https://images.pexels.com/photos/356378/pexels-photo-356378.jpeg?w=1260&h=750&dpr=2&auto=compress&cs=tinysrgb' }}
+            source={{ uri: profileImage }}
           />
 
           <View style={{ flex: 1 }}>
@@ -120,10 +181,19 @@ class CreatePostScreen extends Component {
             multiline
             placeholder="What's on your mind?"
             placeholderTextColor="#DDD"
-            onChangeText={text => this.setState({ text })}
-            value={this.state.text}
+            onChangeText={text => this.setState({ description: text })}
+            value={description}
             underlineColorAndroid="rgba(0,0,0,0)"
           />
+
+          <Text style={styles.orText}>OR</Text>
+
+          <TouchableOpacity
+            style={styles.pictureCapture}
+            onPress={() => this.takeAndUploadPhotoAsync()}
+          >
+            {this.renderImage()}
+          </TouchableOpacity>
         </View>
 
         <LoadingModal visible={this.state.isLoading} />
@@ -140,6 +210,7 @@ CreatePostScreen.propTypes = {
     loggedInUser: PropTypes.shape({
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
+      profile_image: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
 };
@@ -189,10 +260,32 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
+    flex: 1,
     marginLeft: 12,
     marginRight: 12,
     fontWeight: 'bold',
     fontSize: 24,
+    textAlignVertical: 'top',
+  },
+  orText: {
+    height: 36,
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: '#BBB',
+    alignSelf: 'center',
+  },
+  pictureCapture: {
+    flex: 1,
+    marginTop: 24,
+    marginBottom: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  picture: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
   },
 });
 
