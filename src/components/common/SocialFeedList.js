@@ -46,7 +46,7 @@ SocialFeedList.propTypes = {
     createdAt: PropTypes.string.isRequired,
     description: PropTypes.string,
     id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string,
     updatedAt: PropTypes.string.isRequired,
     userId: PropTypes.number.isRequired,
   })),

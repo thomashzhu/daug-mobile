@@ -55,7 +55,7 @@ class SocialFeedPost extends Component {
   renderImage = () => {
     const { item, navigationDisabled } = this.props;
 
-    if (item) {
+    if (item && item.image) {
       return (
         <TouchableWithoutFeedback
           disabled={navigationDisabled}
@@ -92,10 +92,11 @@ class SocialFeedPost extends Component {
           <Text style={styles.postHeaderName}>{user ? user.name : ''}</Text>
         </TouchableOpacity>
   
-        <View style={{ height: item.image ? 300 : 100 }}>
+        <View style={{ height: item.image ? 300 : 0 }}>
           {this.renderImage()}
-          {this.renderDescription()}
         </View>
+
+        {this.renderDescription()}
   
         <View style={styles.postStatistics}>
           <Text style={{ flex: 1 }}>{timeSince(new Date(item.createdAt))}</Text>
@@ -140,7 +141,7 @@ SocialFeedPost.propTypes = {
     createdAt: PropTypes.string.isRequired,
     description: PropTypes.string,
     id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
+    image: PropTypes.string,
     updatedAt: PropTypes.string.isRequired,
     userId: PropTypes.number.isRequired,
   }).isRequired,

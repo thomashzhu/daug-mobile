@@ -29,16 +29,28 @@ class SocialFeedScreen extends React.Component {
   }
 
   componentWillMount() {
+    const promptToReLogin = (error) => {
+      const { navigate } = this.props.navigation;
+      Alert.alert(
+        'Error',
+        `Failed to retrieve the current user's information. ${error}`,
+        [
+          { text: 'OK', onPress: () => navigate('IntroStack') },
+        ],
+        { cancelable: false },
+      );
+    };
+
     this.readLoginData()
       .then((value) => {
         if (value) {
           this.props.userLoggedIn(value);
         } else {
-          Alert.alert("Failed to retrieve the current user's information.");
+          promptToReLogin('');
         }
       })
       .catch((error) => {
-        Alert.alert(`Failed to retrieve the current user's information. ${error}`);
+        promptToReLogin(error);
       });
   }
 
