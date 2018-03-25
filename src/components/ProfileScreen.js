@@ -31,18 +31,29 @@ class ProfileScreen extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (this.state.isCurrentUser) {
-      this.fetchPosts(this.props.user.loggedInUser.id);
-    }
+  componentWillMount() {
+    const { isCurrentUser } = this.state;
+    const { loggedInUser, selectedUser } = this.props.user;
+    const userId = isCurrentUser
+      ? loggedInUser.id
+      : selectedUser.id;
 
-    DeviceEventEmitter.addListener('updatedProfile', ({ id }) => {
-      this.fetchPosts(id);
-    });
+    this.fetchPosts(userId);
+
+    if (isCurrentUser) {
+      DeviceEventEmitter.addListener('updatedProfile', ({ id }) => {
+        this.fetchPosts(id);
+      });
+    }
   }
 
   componentWillUnmount() {
     this.props.dismissUser();
+
+    const { isCurrentUser } = this.state;
+    if (isCurrentUser) {
+      DeviceEventEmitter.removeListener('updatedProfile');
+    }
   }
 
   fetchPosts = async (userId) => {
