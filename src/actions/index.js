@@ -2,15 +2,20 @@ import { NavigationActions } from 'react-navigation';
 
 import {
   USER_LOGGED_IN,
+  USER_LOGGED_OUT,
   USER_SELECTED,
   USER_DISMISSED,
   USER_UPDATED,
   POST_SELECTED,
 } from './types';
 
-export const userLoggedIn = user => ({
+export const logInUser = user => ({
   type: USER_LOGGED_IN,
   payload: user,
+});
+
+export const logOutUser = () => ({
+  type: USER_LOGGED_OUT,
 });
 
 export const selectUser = user => (

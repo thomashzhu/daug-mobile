@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import { AsyncStorage } from 'react-native';
-import PropTypes from 'prop-types';
-
+import { PropTypes } from 'prop-types';
 import { Provider, connect } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
-import ReduxThunk from 'redux-thunk';
+import thunk from 'redux-thunk';
+import { persistStore, persistCombineReducers } from 'redux-persist';
 import { addNavigationHelpers } from 'react-navigation';
 import {
   createReduxBoundAddListener,
   createReactNavigationReduxMiddleware,
 } from 'react-navigation-redux-helpers';
+import { PersistGate } from 'redux-persist/integration/react';
+
+import RootNavigationStack from './src/navigation/RootNavigationStack';
 import reducers from './src/reducers';
 
-import RootNavigator from './src/navigation/RootNavigator';
-
-let isLoggedIn = false;
-
-class Root extends Component {
+/* eslint-disable react/prefer-stateless-function  */
+class RootComponent extends Component {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     rootNavigation: PropTypes.shape({
@@ -26,75 +26,58 @@ class Root extends Component {
     }).isRequired,
   };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      checkedLoggedIn: false,
-    };
-  }
-
-  componentWillMount() {
-    this.readLoginData()
-      .then((success) => {
-        isLoggedIn = success;
-        this.setState({ checkedLoggedIn: true });
-      })
-      .catch(() => {
-        isLoggedIn = false;
-        this.setState({ checkedLoggedIn: true });
-      });
-  }
-
-  readLoginData = () => (
-    new Promise((resolve, reject) => {
-      AsyncStorage.getItem('loggedInUser')
-        .then((value) => {
-          if (value !== null) {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        })
-        .catch(error => reject(error));
-    })
-  );
-
-  render = () => {
+  render() {
     const { dispatch, rootNavigation } = this.props;
     const addListener = createReduxBoundAddListener('root');
-
+    
     const navigation = addNavigationHelpers({
       dispatch,
       state: rootNavigation,
       addListener,
     });
 
-    if (!this.state.checkedLoggedIn) {
-      return null;
-    }
-
-    return <RootNavigator navigation={navigation} />;
+    return (
+      <RootNavigationStack navigation={navigation} />
+    );
   }
 }
-const mapStateToProps = state => ({
-  rootNavigation: state.rootNavigation,
-});
-const RootNavigationStack = connect(mapStateToProps)(Root);
+/* eslint-enable react/prefer-stateless-function  */
+
+const ConnectedRootComponent = (() => {
+  const mapStateToProps = state => ({
+    rootNavigation: state.rootNavigation,
+  });
+
+  return connect(mapStateToProps, null)(RootComponent);
+})();
 
 const App = () => {
   const navMiddleware = createReactNavigationReduxMiddleware(
     'root',
     state => state.rootNavigation,
   );
-  const store = createStore(reducers, {}, applyMiddleware(ReduxThunk, navMiddleware));
+
+  const persistConfig = {
+    key: 'root',
+    storage: AsyncStorage,
+    whitelist: ['user'],
+  };
+  const persistedReducer = persistCombineReducers(persistConfig, reducers);
+  
+  const store = createStore(
+    persistedReducer,
+    {},
+    applyMiddleware(thunk, navMiddleware),
+  );
+  const persistor = persistStore(store);
 
   return (
     <Provider store={store}>
-      <RootNavigationStack />
+      <PersistGate persistor={persistor}>
+        <ConnectedRootComponent />
+      </PersistGate>
     </Provider>
   );
 };
 
 export default App;
-export const isUserLoggedIn = isLoggedIn;

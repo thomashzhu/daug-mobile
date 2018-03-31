@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { RoundTextInput, LoadingModal } from '../components/common';
-import { userLoggedIn } from '../actions';
+import { logInUser } from '../actions';
 
 const fetch = require('node-fetch');
 
@@ -68,14 +68,8 @@ class LoginScreen extends React.Component {
         const responseJSON = await response.json();
 
         if (response.status === 201) {
-          this.props.userLoggedIn(responseJSON.user);
-
-          try {
-            await AsyncStorage.setItem('loggedInUser', JSON.stringify(responseJSON.user));
-          } catch (error) {
-            // Error saving data
-          }
-
+          this.props.logInUser(responseJSON.user, this.props.navigation);
+          
           this.setState({ isLoading: false });
           navigate('HomeTabs');
         } else {
@@ -191,7 +185,7 @@ LoginScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
-  userLoggedIn: PropTypes.func.isRequired,
+  logInUser: PropTypes.func.isRequired,
 };
 
 const styles = {
@@ -220,7 +214,7 @@ const styles = {
 };
 
 const mapDispatchToProps = {
-  userLoggedIn,
+  logInUser,
 };
 
 export default connect(null, mapDispatchToProps)(LoginScreen);

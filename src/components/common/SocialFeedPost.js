@@ -3,20 +3,37 @@ import { StyleSheet, View, TouchableOpacity, Image, Text, TouchableWithoutFeedba
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import axios from 'axios';
+import _ from 'lodash';
 
 import { selectUser, selectPost } from '../../actions';
 import { timeSince } from '../../utils/Helpers';
 
 const fetch = require('node-fetch');
 
+const SERVER_ROOT_URL = 'https://daug-app.herokuapp.com';
+
 class SocialFeedPost extends Component {
   constructor(props) {
     super(props);
 
+    const { loggedInUser } = props.user;
+    const { id: postId, comments, likes } = props.item;
+
+    const isCommented = (_.findIndex(comments, comment => (
+      comment.userId === loggedInUser.id
+    )) !== -1);
+    const isLiked = (_.findIndex(likes, like => (
+      like.userId === loggedInUser.id
+    )) !== -1);
+
     this.state = {
+      postId,
       user: null,
-      isCommented: false,
-      isLiked: false,
+      commentCount: comments ? comments.length : 0,
+      isCommented,
+      likeCount: likes ? likes.length : 0,
+      isLiked,
     };
   }
 
@@ -24,11 +41,34 @@ class SocialFeedPost extends Component {
     this.fetchUserData();
   }
 
+  commentButtonPressed = () => {
+
+  }
+
+  likeButtonPressed = async () => {
+    try {
+      const { loggedInUser } = this.props.user;
+      const { postId, isLiked, likeCount } = this.state;
+      
+      if (isLiked) {
+        await axios.post(`${SERVER_ROOT_URL}/api/posts/${postId}/unlike/${loggedInUser.id}`);
+        this.setState({ likeCount: likeCount - 1 });
+      } else {
+        await axios.post(`${SERVER_ROOT_URL}/api/posts/${postId}/like/${loggedInUser.id}`);
+        this.setState({ likeCount: likeCount + 1 });
+      }
+
+      this.setState({ isLiked: !isLiked });
+    } catch (error) {
+      console.log('error', error);
+    }
+  }
+
   fetchUserData = async () => {
     try {
       const { item } = this.props;
 
-      const response = await fetch(`https://daug-app.herokuapp.com/api/users/${item.userId}`);
+      const response = await fetch(`${SERVER_ROOT_URL}/api/users/${item.userId}`);
       const responseJSON = await response.json();
 
       if (response.status === 200) {
@@ -79,7 +119,9 @@ class SocialFeedPost extends Component {
 
   render() {
     const { item, navigationDisabled } = this.props;
-    const { user, isCommented, isLiked } = this.state;
+    const {
+      user, isCommented, commentCount, isLiked, likeCount,
+    } = this.state;
 
     return (
       <View>
@@ -103,7 +145,7 @@ class SocialFeedPost extends Component {
   
           <TouchableOpacity
             style={styles.postInteractiveButtonContainer}
-            onPress={() => { this.setState({ isCommented: !isCommented }); }}
+            onPress={this.commentButtonPressed}
           >
             <View style={styles.postInteractiveButton}>
               <SimpleLineIcons
@@ -111,13 +153,13 @@ class SocialFeedPost extends Component {
                 color={isCommented ? 'red' : 'black'}
                 size={24}
               />
-              <Text style={styles.postInteractionCount}>10</Text>
+              <Text style={styles.postInteractionCount}>{commentCount}</Text>
             </View>
           </TouchableOpacity>
   
           <TouchableOpacity
             style={styles.postInteractiveButtonContainer}
-            onPress={() => { this.setState({ isLiked: !isLiked }); }}
+            onPress={this.likeButtonPressed}
           >
             <View style={styles.postInteractiveButton}>
               <SimpleLineIcons
@@ -125,7 +167,7 @@ class SocialFeedPost extends Component {
                 color={isLiked ? 'red' : 'black'}
                 size={24}
               />
-              <Text style={styles.postInteractionCount}>200</Text>
+              <Text style={styles.postInteractionCount}>{likeCount}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -203,9 +245,13 @@ const styles = StyleSheet.create({
   },
 });
 
+const mapStateToProps = state => ({
+  user: state.user,
+});
+
 const mapDispatchToProps = {
   selectUser,
   selectPost,
 };
 
-export default connect(null, mapDispatchToProps)(SocialFeedPost);
+export default connect(mapStateToProps, mapDispatchToProps)(SocialFeedPost);

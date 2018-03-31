@@ -1,11 +1,9 @@
-import { combineReducers } from 'redux';
+import RootNavigationReducer from './root_navigation_reducer';
+import UserReducer from './user_reducer';
+import PostReducer from './post_reducer';
 
-import RootNavigationReducer from './RootNavigationReducer';
-import UserReducer from './UserReducer';
-import PostReducer from './PostReducer';
-
-export default combineReducers({
+export default {
   rootNavigation: RootNavigationReducer,
   user: UserReducer,
   post: PostReducer,
-});
+};

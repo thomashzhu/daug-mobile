@@ -38,6 +38,7 @@ class RoundTextInput extends Component {
             placeholderTextColor="white"
             underlineColorAndroid="rgba(0,0,0,0)"
             onChangeText={text => textDidChange(text)}
+            autoCorrect={false}
           />
         </View>
         

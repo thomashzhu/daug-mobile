@@ -2,9 +2,7 @@ import React from 'react';
 import { ScrollView, View, Text, TouchableOpacity, Alert, ActivityIndicator, DeviceEventEmitter, AsyncStorage } from 'react-native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
-import { userLoggedIn } from '../actions';
 import SocialFeedList from './common/SocialFeedList';
 
 const fetch = require('node-fetch');
@@ -28,32 +26,6 @@ class SocialFeedScreen extends React.Component {
     };
   }
 
-  componentWillMount() {
-    const promptToReLogin = (error) => {
-      const { navigate } = this.props.navigation;
-      Alert.alert(
-        'Error',
-        `Failed to retrieve the current user's information. ${error}`,
-        [
-          { text: 'OK', onPress: () => navigate('IntroStack') },
-        ],
-        { cancelable: false },
-      );
-    };
-
-    this.readLoginData()
-      .then((value) => {
-        if (value) {
-          this.props.userLoggedIn(value);
-        } else {
-          promptToReLogin('');
-        }
-      })
-      .catch((error) => {
-        promptToReLogin(error);
-      });
-  }
-
   componentDidMount() {
     this.fetchPosts();
 
@@ -62,25 +34,11 @@ class SocialFeedScreen extends React.Component {
     });
   }
 
-  readLoginData = () => (
-    new Promise((resolve, reject) => {
-      AsyncStorage.getItem('loggedInUser')
-        .then((value) => {
-          if (value !== null) {
-            resolve(JSON.parse(value));
-          } else {
-            resolve(null);
-          }
-        })
-        .catch(error => reject(error));
-    })
-  );
-
   fetchPosts = async () => {
     this.setState({ isLoading: true });
 
     try {
-      const response = await fetch('https://daug-app.herokuapp.com/api/posts/all');
+      const response = await fetch('https://daug-app.herokuapp.com/api/feed');
       const responseJSON = await response.json();
 
       if (response.status === 200) {
@@ -164,7 +122,6 @@ SocialFeedScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
-  userLoggedIn: PropTypes.func.isRequired,
 };
 
 const styles = {
@@ -195,8 +152,4 @@ const styles = {
   },
 };
 
-const mapDispatchToProps = {
-  userLoggedIn,
-};
-
-export default connect(null, mapDispatchToProps)(SocialFeedScreen);
+export default SocialFeedScreen;

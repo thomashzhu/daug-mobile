@@ -1,11 +1,13 @@
 import { StackNavigator } from 'react-navigation';
 
+import AppLoadingScreen from '../components/AppLoadingScreen';
 import IntroStack from './IntroStack';
 import HomeTabs from './HomeTabs';
 
-const isUserLoggedIn = require('../../App');
-
 export default StackNavigator({
+  Loading: {
+    screen: AppLoadingScreen,
+  },
   IntroStack: {
     screen: IntroStack,
   },
@@ -13,10 +15,15 @@ export default StackNavigator({
     screen: HomeTabs,
   },
 }, {
-  initialRouteName: (isUserLoggedIn ? 'HomeTabs' : 'IntroStack'),
+  initialRouteName: 'Loading',
   mode: 'modal',
   headerMode: 'none',
   navigationOptions: {
     gesturesEnabled: false,
   },
+  transitionConfig: () => ({
+    transitionSpec: {
+      duration: 0,
+    },
+  }),
 });

@@ -1,5 +1,8 @@
+import { REHYDRATE } from 'redux-persist';
+
 import {
   USER_LOGGED_IN,
+  USER_LOGGED_OUT,
   USER_SELECTED,
   USER_DISMISSED,
   USER_UPDATED,
@@ -12,8 +15,13 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case REHYDRATE:
+      console.log('rehydrate', action.payload);
+      return action.payload ? action.payload.user : state;
     case USER_LOGGED_IN:
       return { ...state, loggedInUser: action.payload };
+    case USER_LOGGED_OUT:
+      return { ...state, loggedInUser: null };
     case USER_SELECTED:
       return { ...state, selectedUser: action.payload };
     case USER_DISMISSED:

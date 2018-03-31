@@ -3,7 +3,7 @@ import { View, Image, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicat
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { dismissUser } from '../actions';
+import { logOutUser, dismissUser } from '../actions';
 import SocialFeedList from './common/SocialFeedList';
 
 const fetch = require('node-fetch');
@@ -78,15 +78,9 @@ class ProfileScreen extends React.Component {
     }
   }
 
-  logout = async () => {
-    try {
-      await AsyncStorage.removeItem('loggedInUser');
-    } catch (error) {
-      // Error saving data
-    }
-
-    const { navigate } = this.props.navigation;
-    navigate('IntroStack');
+  logout = () => {
+    this.props.navigation.navigate('IntroStack');
+    this.props.logOutUser();
   }
 
   renderBanner = (bannerImage) => {
@@ -123,6 +117,15 @@ class ProfileScreen extends React.Component {
 
   render() {
     const { selectedUser, loggedInUser } = this.props.user;
+    if (!selectedUser && !loggedInUser) {
+      return (
+        <ActivityIndicator
+          style={{ justifyContent: 'center' }}
+          size="large"
+        />
+      );
+    }
+
     const { isCurrentUser, posts } = this.state;
     const {
       name, bio, profile_image: profileImage, banner_image: bannerImage,
@@ -203,7 +206,7 @@ ProfileScreen.propTypes = {
   user: PropTypes.shape({
     loggedInUser: PropTypes.shape({
       id: PropTypes.number.isRequired,
-    }).isRequired,
+    }),
     selectedUser: PropTypes.shape({
       createdAt: PropTypes.string.isRequired,
       description: PropTypes.string,
@@ -213,6 +216,7 @@ ProfileScreen.propTypes = {
       userId: PropTypes.number,
     }),
   }).isRequired,
+  logOutUser: PropTypes.func.isRequired,
   dismissUser: PropTypes.func.isRequired,
 };
 
@@ -321,6 +325,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
+  logOutUser,
   dismissUser,
 };
 

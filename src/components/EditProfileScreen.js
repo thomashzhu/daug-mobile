@@ -66,12 +66,6 @@ class EditProfileScreen extends Component {
       if (response.status === 200) {
         this.setState({ isLoading: false });
 
-        try {
-          await AsyncStorage.setItem('loggedInUser', JSON.stringify(responseJSON));
-        } catch (error) {
-          // Error saving data
-        }
-
         this.props.updateUser(responseJSON);
 
         DeviceEventEmitter.emit('updatedProfile', { id });

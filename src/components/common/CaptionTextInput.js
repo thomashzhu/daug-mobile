@@ -3,16 +3,21 @@ import { StyleSheet, View, Text, TextInput } from 'react-native';
 import PropTypes from 'prop-types';
 
 const CaptionTextInput = (props) => {
-  const { caption, onChangeText, value } = props;
+  const {
+    caption, onChangeText, onSubmitEditing, value,
+  } = props;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.caption}>{caption}</Text>
+      {caption &&
+        <Text style={styles.caption}>{caption}</Text>
+      }
 
       <TextInput
         style={styles.textInput}
         underlineColorAndroid="rgba(0,0,0,0)"
         onChangeText={onChangeText}
+        onSubmitEditing={onSubmitEditing}
         value={value}
       />
 
@@ -24,7 +29,12 @@ const CaptionTextInput = (props) => {
 CaptionTextInput.propTypes = {
   caption: PropTypes.string.isRequired,
   onChangeText: PropTypes.func.isRequired,
+  onSubmitEditing: PropTypes.func,
   value: PropTypes.string.isRequired,
+};
+
+CaptionTextInput.defaultProps = {
+  onSubmitEditing: () => {},
 };
 
 const styles = StyleSheet.create({
