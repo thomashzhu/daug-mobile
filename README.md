@@ -180,6 +180,22 @@ Miscellaneous (Log out)
 - [x] Use Redux to share state between tab bar & screens
 - [x] Add working gif of app to `README.MD`
 
+## Wrap up
+
+### Objectives
+
+- Add UI polish, tie up loose end and add remaining functionality
+- Update Readme with app details and publish Expo app for demo
+- Serve as an React Native app that you can showcase on your porfolio
+
+### TODO
+- [x] Add Like, Comment and Follow API functionality
+- [x] Clean up and format `README.MD` to showcase app - [follow this template](https://github.com/mobilespace/MobileGuides/blob/master/showcase_app_readme.md#readme-template-for-showcasing-a-mobile-app)
+- [x] :star: **Bonus:** Add phone number UI to Edit Profile screen
+- [x] :star: **Bonus:** Add Camera functionality to Create Post screen
+- [x] :star: **Bonus:** Use Redux to share state between tab bar & screens
+- [x] Add working gif of app to `README.MD`
+
 ### Demo
 ![assignment_3](https://raw.githubusercontent.com/thomashzhu/daug-mobile/master/screenshots/Assignment-3.gif)
 

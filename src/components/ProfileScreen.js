@@ -184,7 +184,7 @@ class ProfileScreen extends React.Component {
       );
     }
 
-    const { isCurrentUser, user } = this.state;
+    const { isCurrentUser, user, isLoading } = this.state;
     const {
       name, bio, profile_image: profileImage, banner_image: bannerImage,
       posts, followers, following,
@@ -232,9 +232,9 @@ class ProfileScreen extends React.Component {
         
         {this.renderPosts()}
 
-        {!this.state.isLoading &&
+        {isCurrentUser && !isLoading &&
           <View style={styles.personalFeeds}>
-            <TouchableOpacity onPress={() => this.logout()}>
+            <TouchableOpacity onPress={this.logout}>
               <View style={styles.logoutButtonContainer}>
                 <Text style={styles.logoutButton}>LOGOUT</Text>
               </View>

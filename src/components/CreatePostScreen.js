@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, SafeAreaView, Platform, NativeModules, TouchableOpacity, View, Text, Image, TextInput, Alert, DeviceEventEmitter } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, NativeModules, TouchableOpacity, View, Text, Image, TextInput, Alert, DeviceEventEmitter, Keyboard } from 'react-native';
 import { ImagePicker } from 'expo';
 import PropTypes from 'prop-types';
 import { SimpleLineIcons } from '@expo/vector-icons';
@@ -23,6 +23,8 @@ class CreatePostScreen extends Component {
   }
   
   onSubmitButtonPressed = async () => {
+    Keyboard.dismiss();
+    
     this.setState({ isLoading: true });
 
     const { id: userId } = this.props.user.loggedInUser;
@@ -61,11 +63,11 @@ class CreatePostScreen extends Component {
 
       if (response.status === 201) {
         this.setState({ isLoading: false });
-
+        
         DeviceEventEmitter.emit('postCreated');
 
-        const { navigate } = this.props.navigation;
-        navigate('SocialFeed');
+        const { goBack } = this.props.navigation;
+        goBack();
       } else {
         this.setState({ isLoading: false });
 
@@ -167,7 +169,7 @@ class CreatePostScreen extends Component {
           )}
           title="Create Post"
           headerRight={() => (
-            <TouchableOpacity onPress={() => this.onSubmitButtonPressed()}>
+            <TouchableOpacity onPress={this.onSubmitButtonPressed}>
               <Text style={styles.headerButton}>Share</Text>
             </TouchableOpacity>
           )}

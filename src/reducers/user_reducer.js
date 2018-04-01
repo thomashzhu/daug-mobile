@@ -26,6 +26,7 @@ export default (state = INITIAL_STATE, action) => {
     case USER_DISMISSED:
       return { ...state, selectedUser: null };
     case USER_UPDATED:
+      console.log('action.payload', action.payload);
       return { ...state, loggedInUser: action.payload };
     default:
       return state;

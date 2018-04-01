@@ -37,12 +37,13 @@ class SocialFeedPost extends Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.fetchUserData();
   }
 
   commentButtonPressed = () => {
-
+    const { item } = this.props;
+    this.props.selectPost(item);
   }
 
   likeButtonPressed = async () => {
