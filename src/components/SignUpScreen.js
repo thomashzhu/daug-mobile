@@ -1,10 +1,10 @@
 import React from 'react';
-import { Dimensions, KeyboardAvoidingView, View, TouchableOpacity, Text, Keyboard, Alert, AsyncStorage } from 'react-native';
-import Expo, { AuthSession } from 'expo';
+import { Dimensions, KeyboardAvoidingView, View, Keyboard, Alert } from 'react-native';
+import Expo, { AuthSession, LinearGradient } from 'expo';
 import PropTypes from 'prop-types';
-
-import { RoundTextInput, LoadingModal } from '../components/common';
 import { Button } from 'react-native-elements';
+
+import { RoundTextInput } from '../components/common';
 
 const fetch = require('node-fetch');
 
@@ -31,13 +31,10 @@ class SignUpScreen extends React.Component {
       name: '',
       email: '',
       password: '',
-      isLoading: false,
     };
   }
 
   onSubmitButtonPressed = async (name, email, password) => {
-    this.setState({ isLoading: true });
-
     const details = { name, email, password };
 
     let formBody = [];
@@ -63,19 +60,13 @@ class SignUpScreen extends React.Component {
       const responseJSON = await response.json();
 
       if (response.status === 201) {
-        this.setState({ isLoading: false });
-
         const { navigate } = this.props.navigation;
         navigate('HomeTabs');
       } else {
-        this.setState({ isLoading: false });
-
         const error = responseJSON.message;
         Alert.alert('Sign up failed!', `Unable to Signup. ${error}!`);
       }
     } catch (error) {
-      this.setState({ isLoading: false });
-
       Alert.alert('Sign up failed!', 'Unable to Signup. Please try again later');
     }
   }
@@ -129,61 +120,63 @@ class SignUpScreen extends React.Component {
       (name && this.validateEmail(email) && password.length >= 8);
 
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <View style={styles.textInputContainer}>
-          <RoundTextInput
-            iconName="user"
-            placeholder="Name"
-            value={this.state.name}
-            textDidChange={(text) => { this.setState({ name: text }); }}
+      <LinearGradient colors={['#a29bfe', '#b8b3fe']} style={{ flex: 1 }}>
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
+          <View style={styles.textInputContainer}>
+            <RoundTextInput
+              iconName="user"
+              placeholder="Name"
+              value={this.state.name}
+              textDidChange={(text) => { this.setState({ name: text }); }}
+            />
+
+            <RoundTextInput
+              iconName="envelope-open"
+              placeholder="Email"
+              value={this.state.email}
+              textDidChange={(text) => { this.setState({ email: text }); }}
+              error={!email || this.validateEmail(email) ? '' : 'Invalid email'}
+            />
+
+            <RoundTextInput
+              iconName="lock"
+              placeholder="Password"
+              value={this.state.password}
+              textDidChange={(text) => { this.setState({ password: text }); }}
+              error={!password || password.length >= 8 ? '' : 'Password must be at least 8 characters.'}
+              isPassword
+            />
+          </View>
+
+          <Button
+            buttonStyle={styles.button}
+            onPress={() => isSignUpInfoNotEmpty &&
+              this.onSubmitButtonPressed(name, email, password)
+            }
+            backgroundColor={isSignUpInfoNotEmpty ? '#FF9800' : '#9E9E9E'}
+            icon={{ name: 'user', type: 'simple-line-icon' }}
+            title="Sign Up"
           />
 
-          <RoundTextInput
-            iconName="envelope-open"
-            placeholder="Email"
-            value={this.state.email}
-            textDidChange={(text) => { this.setState({ email: text }); }}
-            error={!email || this.validateEmail(email) ? '' : 'Invalid email'}
+          <View style={styles.border} />
+
+          <Button
+            buttonStyle={styles.button}
+            onPress={this.fbLogIn}
+            backgroundColor="#4267B2"
+            icon={{ name: 'social-facebook', type: 'simple-line-icon' }}
+            title="Sign up with Facebook"
           />
 
-          <RoundTextInput
-            iconName="lock"
-            placeholder="Password"
-            value={this.state.password}
-            textDidChange={(text) => { this.setState({ password: text }); }}
-            error={!password || password.length >= 8 ? '' : 'Password must be at least 8 characters.'}
-            isPassword
+          <Button
+            buttonStyle={styles.button}
+            onPress={this.twitterLogIn}
+            backgroundColor="#29ABEC"
+            icon={{ name: 'social-twitter', type: 'simple-line-icon' }}
+            title="Sign up with Twitter"
           />
-        </View>
-
-        <Button
-          buttonStyle={styles.button}
-          onPress={() => isSignUpInfoNotEmpty && this.onSubmitButtonPressed(name, email, password)}
-          backgroundColor={isSignUpInfoNotEmpty ? '#FF9800' : '#9E9E9E'}
-          icon={{ name: 'user', type: 'simple-line-icon' }}
-          title="Sign Up"
-        />
-
-        <View style={styles.border} />
-
-        <Button
-          buttonStyle={styles.button}
-          onPress={this.fbLogIn}
-          backgroundColor="#4267B2"
-          icon={{ name: 'social-facebook', type: 'simple-line-icon' }}
-          title="Sign up with Facebook"
-        />
-
-        <Button
-          buttonStyle={styles.button}
-          onPress={this.twitterLogIn}
-          backgroundColor="#29ABEC"
-          icon={{ name: 'social-twitter', type: 'simple-line-icon' }}
-          title="Sign up with Twitter"
-        />
-
-        <LoadingModal visible={this.state.isLoading} />
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </LinearGradient>
     );
   }
 }
@@ -197,7 +190,6 @@ SignUpScreen.propTypes = {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#a29bfe',
     justifyContent: 'center',
     alignItems: 'center',
   },

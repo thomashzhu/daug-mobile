@@ -93,6 +93,7 @@ class SocialFeedScreen extends React.Component {
             onPress={() => navigate('CreatePost')}
           >
             <SimpleLineIcons
+              color="#7e7ecd"
               name="picture"
               size={24}
             />
@@ -103,7 +104,7 @@ class SocialFeedScreen extends React.Component {
             onPress={() => navigate('CreatePost')}
           >
             <SimpleLineIcons
-              style={styles.createPostIconButton}
+              color="#7e7ecd"
               name="note"
               size={24}
             />
@@ -137,7 +138,7 @@ const styles = {
     backgroundColor: '#FFF',
   },
   createPostLinkText: {
-    color: '#B4B4D9',
+    color: '#7e7ecd',
     fontWeight: 'bold',
     fontSize: 16,
     marginLeft: 12,

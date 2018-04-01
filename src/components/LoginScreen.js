@@ -1,11 +1,11 @@
 import React from 'react';
 import { Dimensions, KeyboardAvoidingView, View, Alert, Keyboard } from 'react-native';
-import Expo, { AuthSession } from 'expo';
+import Expo, { AuthSession, LinearGradient } from 'expo';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button } from 'react-native-elements';
 
-import { RoundTextInput, LoadingModal } from '../components/common';
+import { RoundTextInput } from '../components/common';
 import { logInUser } from '../actions';
 
 const fetch = require('node-fetch');
@@ -32,7 +32,6 @@ class LoginScreen extends React.Component {
     this.state = {
       email: '',
       password: '',
-      isLoading: false,
     };
   }
 
@@ -40,8 +39,6 @@ class LoginScreen extends React.Component {
     if (email !== '' && password !== '') {
       Keyboard.dismiss();
     
-      this.setState({ isLoading: true });
-
       const { navigate } = this.props.navigation;
 
       const details = { email, password };
@@ -71,17 +68,12 @@ class LoginScreen extends React.Component {
         if (response.status === 201) {
           this.props.logInUser(responseJSON.user, this.props.navigation);
           
-          this.setState({ isLoading: false });
           navigate('HomeTabs');
-        } else {
-          this.setState({ isLoading: false });
-          
+        } else {          
           const error = responseJSON.message;
           Alert.alert('Log in failed!', `Unable to Login. ${error}!`);
         }
-      } catch (error) {
-        this.setState({ isLoading: false });
-        
+      } catch (error) {        
         Alert.alert('Log in failed!', 'Unable to Login. Please try again later');
       }
     }
@@ -135,54 +127,56 @@ class LoginScreen extends React.Component {
       (this.validateEmail(email) && password.length >= 8);
 
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
-        <View style={styles.textInputContainer}>
-          <RoundTextInput
-            iconName="envelope-open"
-            placeholder="Email"
-            value={this.state.email}
-            textDidChange={(text) => { this.setState({ email: text }); }}
-            error={!email || this.validateEmail(email) ? '' : 'Invalid email'}
+      <LinearGradient colors={['#a29bfe', '#b8b3fe']} style={{ flex: 1 }}>
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
+          <View style={styles.textInputContainer}>
+            <RoundTextInput
+              iconName="envelope-open"
+              placeholder="Email"
+              value={this.state.email}
+              textDidChange={(text) => { this.setState({ email: text }); }}
+              error={!email || this.validateEmail(email) ? '' : 'Invalid email'}
+            />
+
+            <RoundTextInput
+              iconName="lock"
+              placeholder="Password"
+              value={this.state.password}
+              textDidChange={(text) => { this.setState({ password: text }); }}
+              error={!password || password.length >= 8 ? '' : 'Password must be at least 8 characters.'}
+              isPassword
+            />
+          </View>
+
+          <Button
+            buttonStyle={styles.button}
+            onPress={() => isLoginInfoNotEmpty && this.onSubmitButtonPressed(email, password)}
+            backgroundColor={isLoginInfoNotEmpty ? '#FF9800' : '#9E9E9E'}
+            icon={{ name: 'login', type: 'simple-line-icon' }}
+            title="Login"
           />
 
-          <RoundTextInput
-            iconName="lock"
-            placeholder="Password"
-            value={this.state.password}
-            textDidChange={(text) => { this.setState({ password: text }); }}
-            error={!password || password.length >= 8 ? '' : 'Password must be at least 8 characters.'}
-            isPassword
+          <View style={styles.border} />
+
+          <Button
+            buttonStyle={styles.button}
+            onPress={this.fbLogIn}
+            backgroundColor="#4267B2"
+            icon={{ name: 'social-facebook', type: 'simple-line-icon' }}
+            title="Login with Facebook"
           />
-        </View>
 
-        <Button
-          buttonStyle={styles.button}
-          onPress={() => isLoginInfoNotEmpty && this.onSubmitButtonPressed(email, password)}
-          backgroundColor={isLoginInfoNotEmpty ? '#FF9800' : '#9E9E9E'}
-          icon={{ name: 'login', type: 'simple-line-icon' }}
-          title="Login"
-        />
+          <Button
+            buttonStyle={styles.button}
+            onPress={this.twitterLogIn}
+            backgroundColor="#29ABEC"
+            icon={{ name: 'social-twitter', type: 'simple-line-icon' }}
+            title="Login with Twitter"
+          />
 
-        <View style={styles.border} />
-
-        <Button
-          buttonStyle={styles.button}
-          onPress={this.fbLogIn}
-          backgroundColor="#4267B2"
-          icon={{ name: 'social-facebook', type: 'simple-line-icon' }}
-          title="Login with Facebook"
-        />
-
-        <Button
-          buttonStyle={styles.button}
-          onPress={this.twitterLogIn}
-          backgroundColor="#29ABEC"
-          icon={{ name: 'social-twitter', type: 'simple-line-icon' }}
-          title="Login with Twitter"
-        />
-
-        <LoadingModal visible={this.state.isLoading} />
-      </KeyboardAvoidingView>
+          {/* <LoadingModal visible={this.state.isLoading} /> */}
+        </KeyboardAvoidingView>
+      </LinearGradient>
     );
   }
 }
@@ -197,7 +191,6 @@ LoginScreen.propTypes = {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#a29bfe',
     justifyContent: 'center',
     alignItems: 'center',
   },

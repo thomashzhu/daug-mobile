@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, View, Text, TouchableOpacity, Alert } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import { DangerZone } from 'expo';
+import { DangerZone, LinearGradient } from 'expo';
 import PropTypes from 'prop-types';
 
 const fetch = require('node-fetch');
@@ -71,7 +71,7 @@ class IntroScreen extends React.Component {
     const { navigate } = this.props.navigation;
 
     return (
-      <View style={styles.container}>
+      <LinearGradient colors={['#fff', '#e2e7e9']} style={styles.container}>
         <View style={styles.topContainer}>
           <View style={styles.carouselContainer}>
             <Carousel
@@ -85,7 +85,7 @@ class IntroScreen extends React.Component {
             />
           </View>
 
-          <Text style={styles.slogan}>Daug... where pets hang out</Text>
+          <Text style={styles.slogan}>{'"'}Daug... where pets hang out{'"'}</Text>
         </View>
 
         <View style={styles.buttonRow}>
@@ -97,7 +97,7 @@ class IntroScreen extends React.Component {
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </LinearGradient>
     );
   }
 }
@@ -116,7 +116,7 @@ IntroScreen.propTypes = {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#F1F1F6',
+    // backgroundColor: '#F1F1F6',
   },
   topContainer: {
     flex: 1,

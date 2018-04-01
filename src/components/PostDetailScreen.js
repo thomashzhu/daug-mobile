@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#7e7ecd',
   },
   newCommentInput: {
     flex: 1,
