@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, Text, TextInput, FlatList, View, Image, Keyboard, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, ScrollView, Text, TextInput, FlatList, View, Image, Keyboard, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import axios from 'axios';

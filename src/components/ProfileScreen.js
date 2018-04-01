@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, Image, Text, TouchableOpacity, ScrollView, Alert, ActivityIndicator, DeviceEventEmitter, AsyncStorage } from 'react-native';
+import { View, Image, Text, TouchableOpacity, ScrollView, ActivityIndicator, DeviceEventEmitter } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import axios from 'axios';
+import _ from 'lodash';
 
 import { logOutUser, dismissUser } from '../actions';
 import SocialFeedList from './common/SocialFeedList';
 
-const fetch = require('node-fetch');
+const SERVER_ROOT_URL = 'https://daug-app.herokuapp.com';
 
 class ProfileScreen extends React.Component {
   static navigationOptions = {
@@ -27,7 +29,8 @@ class ProfileScreen extends React.Component {
     this.state = {
       isLoading: false,
       isCurrentUser,
-      posts: isCurrentUser ? [] : loggedInUser.posts,
+      isFollowing: null,
+      user: null,
     };
   }
 
@@ -38,7 +41,7 @@ class ProfileScreen extends React.Component {
       ? loggedInUser.id
       : selectedUser.id;
 
-    this.fetchPosts(userId);
+    this.fetchUser(userId);
 
     if (isCurrentUser) {
       DeviceEventEmitter.addListener('updatedProfile', ({ id }) => {
@@ -56,25 +59,43 @@ class ProfileScreen extends React.Component {
     }
   }
 
-  fetchPosts = async (userId) => {
+  fetchUser = async (userId) => {
     this.setState({ isLoading: true });
+    
+    const { data: user } = await axios.get(`${SERVER_ROOT_URL}/api/users/${userId}`);
+    const { followers } = user;
+    const { loggedInUser: { id: loggedInUserId } } = this.props.user;
+    const followingIndex = _.findIndex(followers, follower => (
+      follower.followerId === loggedInUserId
+    ));
 
-    try {
-      const response = await fetch(`https://daug-app.herokuapp.com/api/users/${userId}`);
-      const responseJSON = await response.json();
+    this.setState({
+      isLoading: false,
+      isFollowing: followingIndex !== -1,
+      user,
+    });
+  }
 
-      if (response.status === 200) {
-        this.setState({ isLoading: false, posts: responseJSON.posts });
-      } else {
-        this.setState({ isLoading: false });
+  followerUser = async () => {
+    const { user } = this.state;
+    if (!user) return;
 
-        const error = responseJSON.message;
-        Alert.alert('Loading posts failed!', `Unable to load posts. ${error}!`);
-      }
-    } catch (error) {
-      this.setState({ isLoading: false });
-      
-      Alert.alert('Loading posts failed!', 'Unable to load posts. Please try again later');
+    const { id: userId, followers } = user;
+    const { loggedInUser: { id: loggedInUserId } } = this.props.user;
+    const followingIndex = _.findIndex(followers, follower => (
+      follower.followerId === loggedInUserId
+    ));
+
+    if (followingIndex !== -1) {
+      await axios.post(`${SERVER_ROOT_URL}/api/users/${loggedInUserId}/unfollow/${userId}`);
+      this.setState({
+        isFollowing: false,
+      });
+    } else {
+      await axios.post(`${SERVER_ROOT_URL}/api/users/${loggedInUserId}/follow/${userId}`);
+      this.setState({
+        isFollowing: true,
+      });
     }
   }
 
@@ -97,6 +118,34 @@ class ProfileScreen extends React.Component {
     );
   }
 
+  renderFollowButton = () => {
+    const { isCurrentUser, isFollowing } = this.state;
+    const { navigate } = this.props.navigation;
+
+    let followingButtonText;
+    if (isFollowing === null) {
+      followingButtonText = '...';
+    } else {
+      followingButtonText = (isFollowing ? 'Unfollow' : 'Follow');
+    }
+
+    const buttonText = (isCurrentUser ? 'Edit Profile' : followingButtonText);
+    const onPressPrimaryButton = (isCurrentUser ?
+      () => navigate('EditProfile') :
+      () => this.followerUser()
+    );
+
+    return (
+      <View style={styles.bottomStatusPanelRow}>
+        <TouchableOpacity onPress={onPressPrimaryButton}>
+          <View style={styles.editProfileButtonContainer}>
+            <Text style={styles.editProfileButton}>{buttonText}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   renderPosts = () => {
     if (this.state.isLoading) {
       return (
@@ -107,10 +156,12 @@ class ProfileScreen extends React.Component {
       );
     }
 
+    const { user: { posts } } = this.state;
+
     return (
       <SocialFeedList
         navigationDisabled
-        posts={this.state.posts}
+        posts={posts}
       />
     );
   }
@@ -126,18 +177,11 @@ class ProfileScreen extends React.Component {
       );
     }
 
-    const { isCurrentUser, posts } = this.state;
+    const { isCurrentUser, user } = this.state;
     const {
       name, bio, profile_image: profileImage, banner_image: bannerImage,
-    } = (isCurrentUser ? loggedInUser : selectedUser);
-    
-    const { navigate } = this.props.navigation;
-
-    const primaryButtonText = (isCurrentUser ? 'Edit Profile' : 'Following');
-    const onPressPrimaryButton = (isCurrentUser ?
-      () => { navigate('EditProfile'); } :
-      () => { Alert.alert('Feature to be implemented'); }
-    );
+      posts, followers, following,
+    } = user || (isCurrentUser ? loggedInUser : selectedUser);
 
     return (
       <ScrollView style={{ flexDirection: 'column' }}>
@@ -157,23 +201,17 @@ class ProfileScreen extends React.Component {
                 </View>
 
                 <View style={styles.stats}>
-                  <Text style={{ fontWeight: 'bold' }}>100</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{ followers ? followers.length : 0 }</Text>
                   <Text style={{ fontWeight: 'bold' }}>Followers</Text>
                 </View>
 
                 <View style={styles.stats}>
-                  <Text style={{ fontWeight: 'bold' }}>50</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{ following ? following.length : 0 }</Text>
                   <Text style={{ fontWeight: 'bold' }}>Following</Text>
                 </View>
               </View>
 
-              <View style={styles.bottomStatusPanelRow}>
-                <TouchableOpacity onPress={onPressPrimaryButton}>
-                  <View style={styles.editProfileButtonContainer}>
-                    <Text style={styles.editProfileButton}>{primaryButtonText}</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
+              {this.renderFollowButton()}
             </View>
           </View>
 
