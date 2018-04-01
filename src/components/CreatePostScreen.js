@@ -79,8 +79,25 @@ class CreatePostScreen extends Component {
     }
   }
 
-  takeAndUploadPhotoAsync = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
+  promptMediaType = () => {
+    Alert.alert(
+      'Media Type',
+      null,
+      [
+        { text: 'Camera', onPress: () => this.takeAndUploadPhotoAsync('camera') },
+        { text: 'Photo', onPress: () => this.takeAndUploadPhotoAsync('photos') },
+        { text: 'Cancel', onPress: () => {} },
+      ],
+      { cancelable: false },
+    );
+  }
+
+  takeAndUploadPhotoAsync = async (mediaType) => {
+    const mediaMethod = (mediaType === 'camera'
+      ? ImagePicker.launchCameraAsync
+      : ImagePicker.launchImageLibraryAsync);
+
+    const result = await mediaMethod({
       allowsEditing: true,
       aspect: [4, 3],
     });
@@ -190,7 +207,7 @@ class CreatePostScreen extends Component {
 
           <TouchableOpacity
             style={styles.pictureCapture}
-            onPress={() => this.takeAndUploadPhotoAsync()}
+            onPress={this.promptMediaType}
           >
             {this.renderImage()}
           </TouchableOpacity>
