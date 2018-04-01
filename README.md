@@ -2,12 +2,12 @@
 
 This repo is the mobile app for Daug.
 
-
-
 <p align="center">
   <img alt="daug" src="screenshots/app/logo.png" width="450">
-  <br>(logo source: LottieFiles - https://www.lottiefiles.com/330-empty-status)
+  <br>
+  logo source: <a href="https://www.lottiefiles.com/330-empty-status">LottieFiles</a>
 </p>
+
 
 <h3 align="center">
   Daug
