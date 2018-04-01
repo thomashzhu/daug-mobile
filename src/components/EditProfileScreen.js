@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, SafeAreaView, Platform, NativeModules, Alert, ScrollView, TouchableOpacity, Text, View, Image, AsyncStorage, DeviceEventEmitter } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, NativeModules, Alert, ScrollView, TouchableOpacity, Text, View, Image, DeviceEventEmitter } from 'react-native';
 import { ImagePicker } from 'expo';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { RNS3 } from 'react-native-aws3';
+import axios from 'axios';
 
 import { updateUser } from '../actions';
 
@@ -11,21 +12,22 @@ import Header from './common/Header';
 import CaptionTextInput from './common/CaptionTextInput';
 import LoadingModal from './common/LoadingModal';
 
-const fetch = require('node-fetch');
+const SERVER_ROOT_URL = 'https://daug-app.herokuapp.com';
 
 class EditProfileScreen extends Component {
   constructor(props) {
     super(props);
 
     const {
-      profile_image: profileImage, name, bio, email,
+      profile_image: profileImage, name, bio, email, phone_number: phoneNumber,
     } = this.props.loggedInUser;
 
     this.state = {
       profileImage,
-      name,
+      name: name || '',
       bio: (bio === 'null' || !bio ? '' : bio),
-      email,
+      email: email || '',
+      phoneNumber: phoneNumber || '',
       isLoading: false,
     };
   }
@@ -35,54 +37,34 @@ class EditProfileScreen extends Component {
 
     const { id } = this.props.loggedInUser;
     const {
-      profileImage, name, bio, email,
+      profileImage, name, bio, email, phoneNumber,
     } = this.state;
-    const details = {
-      profile_image: profileImage, name, bio, email,
-    };
-
-    let formBody = [];
-
-    for (var property in details) {
-      const encodedKey = encodeURIComponent(property);
-      const encodedValue = encodeURIComponent(details[property]);
-
-      formBody.push(encodedKey + "=" + encodedValue);
-    }
-
-    formBody = formBody.join('&');
 
     try {
-      const response = await fetch(`https://daug-app.herokuapp.com/api/users/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-        },
-        body: formBody,
+      const { status, data: json } = await axios.put(`${SERVER_ROOT_URL}/api/users/${id}`, {
+        profile_image: profileImage, name, bio, email, phone_number: phoneNumber,
       });
-
-      const responseJSON = await response.json();
-
-      if (response.status === 200) {
+      debugger;
+      if (status === 200) {
         this.setState({ isLoading: false });
-
-        this.props.updateUser(responseJSON);
-
+        debugger;
+        this.props.updateUser(json);
+        debugger;
         DeviceEventEmitter.emit('updatedProfile', { id });
         DeviceEventEmitter.emit('postCreated');
         
+        debugger;
         const { goBack } = this.props.navigation;
         goBack();
       } else {
         this.setState({ isLoading: false });
 
-        const error = responseJSON.message;
-        Alert.alert('Update user failed!', `Unable to update user information. ${error}!`);
+        Alert.alert('Update user failed!', 'Unable to update user information!');
       }
     } catch (error) {
       this.setState({ isLoading: false });
 
-      Alert.alert('Update user failed!', 'Unable to update user information. Please try again later');
+      Alert.alert('Update user failed!', `Unable to update user information. ${error}`);
     }
   }
 
@@ -125,7 +107,7 @@ class EditProfileScreen extends Component {
   render() {
     const { goBack } = this.props.navigation;
     const {
-      profileImage, name, bio, email,
+      profileImage, name, bio, email, phoneNumber,
     } = this.state;
 
     return (
@@ -184,6 +166,13 @@ class EditProfileScreen extends Component {
                 onChangeText={text => this.setState({ email: text })}
                 value={email}
               />
+
+              <CaptionTextInput
+                style={{ marginBottom: 12 }}
+                caption="Phone"
+                onChangeText={text => this.setState({ phoneNumber: text })}
+                value={phoneNumber || ''}
+              />
             </View>
           </ScrollView>
 
@@ -200,10 +189,11 @@ EditProfileScreen.propTypes = {
   }).isRequired,
   loggedInUser: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    profile_image: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    bio: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
+    profile_image: PropTypes.string,
+    name: PropTypes.string,
+    bio: PropTypes.string,
+    email: PropTypes.string,
+    phone_number: PropTypes.string,
   }).isRequired,
   updateUser: PropTypes.func.isRequired,
 };

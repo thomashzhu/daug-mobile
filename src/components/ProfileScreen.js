@@ -45,7 +45,7 @@ class ProfileScreen extends React.Component {
 
     if (isCurrentUser) {
       DeviceEventEmitter.addListener('updatedProfile', ({ id }) => {
-        this.fetchPosts(id);
+        this.fetchUser(id);
       });
     }
   }
@@ -196,17 +196,17 @@ class ProfileScreen extends React.Component {
             <View style={styles.statusPanel}>
               <View style={styles.topStatusPanelRow}>
                 <View style={styles.stats}>
-                  <Text style={{ fontWeight: 'bold' }}>{posts ? posts.length : 0}</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{posts ? posts.length : '...'}</Text>
                   <Text style={{ fontWeight: 'bold' }}>Posts</Text>
                 </View>
 
                 <View style={styles.stats}>
-                  <Text style={{ fontWeight: 'bold' }}>{ followers ? followers.length : 0 }</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{ followers ? followers.length : '...' }</Text>
                   <Text style={{ fontWeight: 'bold' }}>Followers</Text>
                 </View>
 
                 <View style={styles.stats}>
-                  <Text style={{ fontWeight: 'bold' }}>{ following ? following.length : 0 }</Text>
+                  <Text style={{ fontWeight: 'bold' }}>{ following ? following.length : '...' }</Text>
                   <Text style={{ fontWeight: 'bold' }}>Following</Text>
                 </View>
               </View>
