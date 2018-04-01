@@ -110,9 +110,19 @@ class SocialFeedPost extends Component {
 
   renderDescription = () => {
     const { description } = this.props.item;
+    const { item, postNavigationDisabled } = this.props;
 
     if (description) {
-      return <Text style={styles.postCaption}>{description}</Text>;
+      return (
+        <TouchableWithoutFeedback
+          disabled={postNavigationDisabled}
+          onPress={() => this.props.selectPost(item)}
+        >
+          <View>
+            <Text style={styles.postCaption}>{description}</Text>
+          </View>
+        </TouchableWithoutFeedback>
+      );
     }
     return null;
   }
