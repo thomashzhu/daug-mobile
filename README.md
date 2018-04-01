@@ -27,6 +27,24 @@ This repo is the mobile app for Daug.
 
 ![app_demo](screenshots/app/daug-demo.gif)
 
+<hr />
+
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/app/1.png" width="250" />
+  <img src="screenshots/app/2.png" width="250" />
+  <img src="screenshots/app/3.png" width="250" />
+</div>
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/app/4.png" width="250" />
+  <img src="screenshots/app/5.png" width="250" />
+  <img src="screenshots/app/6.png" width="250" />
+</div>
+<div style={{display: flex; flex-direction: row}}>
+  <img src="screenshots/app/7.png" width="250" />
+  <img src="screenshots/app/8.png" width="250" />
+  <img src="screenshots/app/9.png" width="250" />
+</div>
+
 ### [Demo - Try it on Expo](https://expo.io/@thomashzhu/daug-mobile)
 
 ## Functionality
