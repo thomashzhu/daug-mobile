@@ -25,24 +25,24 @@ This repo is the mobile app for Daug.
 - They can **upload selfies** or **post their thoughts** for other pets to see.
 - They can also look at **other pets posts** and either **paw** (like) or **scratch** (dislike) it.
 
-![app_demo](screenshots/app/daug-demo.gif)
+<img src="screenshots/app/daug-demo.gif" width="250" />
 
 <hr />
 
-<div style={{ display: flex; flex-direction: row}}>
-  <img style={{ padding: 20px 10px }} src="screenshots/app/1.PNG" width="250" />
-  <img style={{ padding: 20px 10px }} src="screenshots/app/2.PNG" width="250" />
-  <img style={{ padding: 20px 10px }} src="screenshots/app/3.PNG" width="250" />
+<div style={{ display: flex; flex-direction: row; justify-content: space-around }}>
+  <img src="screenshots/app/1.PNG" width="250" />
+  <img src="screenshots/app/2.PNG" width="250" />
+  <img src="screenshots/app/3.PNG" width="250" />
 </div>
-<div style={{display: flex; flex-direction: row}}>
-  <img style={{ padding: 20px 10px }} src="screenshots/app/4.PNG" width="250" />
-  <img style={{ padding: 20px 10px }} src="screenshots/app/5.PNG" width="250" />
-  <img style={{ padding: 20px 10px }} src="screenshots/app/6.PNG" width="250" />
+<div style={{ display: flex; flex-direction: row; justify-content: space-around }}>
+  <img src="screenshots/app/4.PNG" width="250" />
+  <img src="screenshots/app/5.PNG" width="250" />
+  <img src="screenshots/app/6.PNG" width="250" />
 </div>
-<div style={{display: flex; flex-direction: row}}>
-  <img style={{ padding: 20px 10px }} src="screenshots/app/7.PNG" width="250" />
-  <img style={{ padding: 20px 10px }} src="screenshots/app/8.PNG" width="250" />
-  <img style={{ padding: 20px 10px }} src="screenshots/app/9.PNG" width="250" />
+<div style={{ display: flex; flex-direction: row; justify-content: space-around }}>
+  <img src="screenshots/app/7.PNG" width="250" />
+  <img src="screenshots/app/8.PNG" width="250" />
+  <img src="screenshots/app/9.PNG" width="250" />
 </div>
 
 ### [Demo - Try it on Expo](https://expo.io/@thomashzhu/daug-mobile)
@@ -77,28 +77,6 @@ exp ios
 - [x] Design & build an Social Feed Screen with [Mock Data](https://raw.githubusercontent.com/mobilespace/daug-mobile/master/app/utils/constants.js?token=AHejrmtQeRKU4ntCxaYLoNiWDlF-kQdKks5am8vHwA%3D%3D)
 - [x] Attach screenshots/gif of screens to `README.MD`
 
-### Demo
-<br />Intro Screen (with Carousel)
-<div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Assignment-1/Intro_Screen_Slide_1.JPG" width="250" />
-  <img src="screenshots/Assignment-1/Intro_Screen_Slide_2.JPG" width="250" />
-</div>
-<br />Login & Sign up
-<div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Assignment-1/Login_Screen.JPG" width="250" />
-  <img src="screenshots/Assignment-1/Sign_Up_Screen.JPG" width="250" />
-</div>
-<br />Facebook & Twitter Auth
-<div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Assignment-1/Facebook_Auth.JPG" width="250" />
-  <img src="screenshots/Assignment-1/Twitter_Auth.JPG" width="250" />
-</div>
-<br />Social Feed & Profile
-<div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Assignment-1/Social_Feed.JPG" width="250" />
-  <img src="screenshots/Assignment-1/Profile_Screen.JPG" width="250" />
-</div>
-
 ## Assignment #2
 
 - [x] Understand the 3 main navigation patterns for mobile apps:
@@ -116,32 +94,6 @@ exp ios
 - [x] :star: **Bonus:** Display Posts on ProfileScreen
 - [ ] :star: **Bonus:** Setup a **HomeNavigator**(using DrawerNavigator) with the **HomeTabs** (as root) and update **RootNavigator** to use **HomeNavigator** instead of **HomeTabs**
 - [x] Add working gif of app to `README.MD`
-
-### Demo
-<br />Home Tab and Profile Tab
-<div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Assignment-2/Home_Tab.JPG" width="250" />
-  <img src="screenshots/Assignment-2/Profile_Tab.JPG" width="250" />
-</div>
-<br />Post Detail Screens
-<div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Assignment-2/Post_Detail_Screen_1.JPG" width="250" />
-  <img src="screenshots/Assignment-2/Post_Detail_Screen_2.JPG" width="250" />
-</div>
-<br />Modal Screens
-<div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Assignment-2/Create_Post_Screen.JPG" width="250" />
-  <img src="screenshots/Assignment-2/Edit_Profile_Screen.JPG" width="250" />
-</div>
-<br />
-Miscellaneous (Separate comment and liked status)
-<div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Assignment-2/Separated_Comment_and_Like_Status.JPG" width="250" />
-</div>
-Miscellaneous (Log out)
-<div style={{display: flex; flex-direction: row}}>
-  <img src="screenshots/Assignment-2/Log_Out.JPG" width="250" />
-</div>
 
 ## Assignment #3
 
@@ -173,3 +125,7 @@ Miscellaneous (Log out)
 - [x] :star: **Bonus:** Add Camera functionality to Create Post screen
 - [x] :star: **Bonus:** Use Redux to share state between tab bar & screens
 - [x] Add working gif of app to `README.MD`
+
+## Feedback
+
+Please fork it and play with it. In case you have any feedback, feel free to open a new issues on this repo or reach out to me [**@thomashzhu**](https://github.com/thomashzhu).
