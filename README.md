@@ -2,6 +2,21 @@
 
 This repo is the mobile app for Daug.
 
+
+
+<p align="center">
+  <img alt="daug" src="screenshots/app/logo.png" width="450">
+  <br>(logo source: LottieFiles - https://www.lottiefiles.com/330-empty-status)
+</p>
+
+<h3 align="center">
+  Daug
+</h3>
+
+<p align="center">
+  Just a place where pets hang out...
+</p>
+
 ## What's Daug?
 
 **Daug is a social network for pets.**
@@ -10,7 +25,16 @@ This repo is the mobile app for Daug.
 - They can **upload selfies** or **post their thoughts** for other pets to see.
 - They can also look at **other pets posts** and either **paw** (like) or **scratch** (dislike) it.
 
-### [Demo - Try it on Expo](https://exp.host/@thomashzhu/daug-mobile)
+![app_demo](screenshots/app/daug-demo.gif)
+
+### [Demo - Try it on Expo](https://expo.io/@thomashzhu/daug-mobile)
+
+## Functionality
+- Daug is a fully functioning Social Network app
+- Users can Sign up & Log into the app
+- Users can create a new Posts (text and/or picture)
+- Users can like and comments on Posts
+- Users can follow each other
 
 ## Getting started
 
@@ -195,9 +219,6 @@ Miscellaneous (Log out)
 - [x] :star: **Bonus:** Add Camera functionality to Create Post screen
 - [x] :star: **Bonus:** Use Redux to share state between tab bar & screens
 - [x] Add working gif of app to `README.MD`
-
-### Demo
-![assignment_3](https://raw.githubusercontent.com/thomashzhu/daug-mobile/master/screenshots/Assignment-3.gif)
 
 ## Submission
 
