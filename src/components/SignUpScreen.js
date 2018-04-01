@@ -4,6 +4,7 @@ import Expo, { AuthSession } from 'expo';
 import PropTypes from 'prop-types';
 
 import { RoundTextInput, LoadingModal } from '../components/common';
+import { Button } from 'react-native-elements';
 
 const fetch = require('node-fetch');
 
@@ -12,9 +13,9 @@ const auth0Domain = 'https://thomashzhu.auth0.com';
 
 class SignUpScreen extends React.Component {
   static navigationOptions = {
-    title: 'Sign Up',
+    title: '',
     headerStyle: {
-      backgroundColor: '#ED8271',
+      backgroundColor: '#a29bfe',
       borderBottomWidth: 0,
     },
     headerTintColor: '#FFF',
@@ -155,28 +156,31 @@ class SignUpScreen extends React.Component {
           />
         </View>
 
-        <TouchableOpacity
-          style={[styles.loginButton, isSignUpInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
+        <Button
+          buttonStyle={styles.button}
           onPress={() => isSignUpInfoNotEmpty && this.onSubmitButtonPressed(name, email, password)}
-        >
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
+          backgroundColor={isSignUpInfoNotEmpty ? '#FF9800' : '#9E9E9E'}
+          icon={{ name: 'user', type: 'simple-line-icon' }}
+          title="Sign Up"
+        />
 
-        <View style={styles.socialButtonRow}>
-          <TouchableOpacity
-            style={[styles.socialButton, { backgroundColor: '#29ABEC' }]}
-            onPress={this.fbLogIn}
-          >
-            <Text style={styles.buttonText}>Facebook</Text>
-          </TouchableOpacity>
+        <View style={styles.border} />
 
-          <TouchableOpacity
-            style={[styles.socialButton, { backgroundColor: '#29ABEC' }]}
-            onPress={this.twitterLogIn}
-          >
-            <Text style={styles.buttonText}>Twitter</Text>
-          </TouchableOpacity>
-        </View>
+        <Button
+          buttonStyle={styles.button}
+          onPress={this.fbLogIn}
+          backgroundColor="#4267B2"
+          icon={{ name: 'social-facebook', type: 'simple-line-icon' }}
+          title="Sign up with Facebook"
+        />
+
+        <Button
+          buttonStyle={styles.button}
+          onPress={this.twitterLogIn}
+          backgroundColor="#29ABEC"
+          icon={{ name: 'social-twitter', type: 'simple-line-icon' }}
+          title="Sign up with Twitter"
+        />
 
         <LoadingModal visible={this.state.isLoading} />
       </KeyboardAvoidingView>
@@ -193,7 +197,7 @@ SignUpScreen.propTypes = {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#ED8271',
+    backgroundColor: '#a29bfe',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -208,15 +212,16 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonText: {
-    color: 'white',
-    fontSize: 14,
+  border: {
+    height: 1,
+    width: Dimensions.get('window').width * 0.7,
+    backgroundColor: '#F1F1F6',
+    marginTop: 32,
+    marginBottom: 12,
   },
-  socialButton: {
-    backgroundColor: '#808080',
-    width: Dimensions.get('window').width * 0.28,
-    justifyContent: 'center',
-    alignItems: 'center',
+  button: {
+    marginTop: 18,
+    width: Dimensions.get('window').width * 0.65,
   },
   socialButtonRow: {
     flexDirection: 'row',

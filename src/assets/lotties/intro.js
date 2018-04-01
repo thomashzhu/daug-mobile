@@ -1,7 +1,5 @@
-import curlyHair from './curlyHair.json';
-import search from './search.json';
+import whale from './whale.json';
 
 module.exports = [
-  search,
-  curlyHair,
+  whale,
 ];

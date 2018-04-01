@@ -14,10 +14,10 @@ class ProfileScreen extends React.Component {
   static navigationOptions = {
     title: 'Profile',
     headerStyle: {
-      backgroundColor: '#FFF',
+      backgroundColor: '#a29bfe',
       borderBottomWidth: 0,
     },
-    headerTintColor: '#FD746C',
+    headerTintColor: '#FFF',
   };
 
   constructor(props) {
@@ -232,13 +232,15 @@ class ProfileScreen extends React.Component {
         
         {this.renderPosts()}
 
-        <View style={styles.personalFeeds}>
-          <TouchableOpacity onPress={() => this.logout()}>
-            <View style={styles.logoutButtonContainer}>
-              <Text style={styles.logoutButton}>LOGOUT</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        {!this.state.isLoading &&
+          <View style={styles.personalFeeds}>
+            <TouchableOpacity onPress={() => this.logout()}>
+              <View style={styles.logoutButtonContainer}>
+                <Text style={styles.logoutButton}>LOGOUT</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        }
       </ScrollView>
     );
   }
@@ -367,7 +369,7 @@ const styles = {
     width: 200,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#29ABEC',
+    backgroundColor: '#a29bfe',
   },
   logoutButton: {
     color: '#FFF',

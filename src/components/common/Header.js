@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     height: 44, // Height of iPhone X notch (max of port. and land.)
   },
   headerText: {
-    color: '#FD746C',
+    color: '#B4B4D9',
     fontSize: 18,
     fontWeight: 'bold',
   },

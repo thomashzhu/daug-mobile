@@ -52,7 +52,7 @@ export default TabNavigator({
   tabBarOptions: {
     showIcon: true,
     showLabel: true,
-    activeTintColor: '#FD746C',
+    activeTintColor: '#a29bfe',
     inactiveTintColor: '#999',
     style: {
       backgroundColor: '#FFF',

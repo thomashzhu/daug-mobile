@@ -11,10 +11,10 @@ class SocialFeedScreen extends React.Component {
   static navigationOptions = {
     title: 'DAUG',
     headerStyle: {
-      backgroundColor: '#FFF',
+      backgroundColor: '#a29bfe',
       borderBottomWidth: 0,
     },
-    headerTintColor: '#FD746C',
+    headerTintColor: '#fff',
   };
 
   constructor(props) {
@@ -137,7 +137,7 @@ const styles = {
     backgroundColor: '#FFF',
   },
   createPostLinkText: {
-    color: '#FD746C',
+    color: '#B4B4D9',
     fontWeight: 'bold',
     fontSize: 16,
     marginLeft: 12,

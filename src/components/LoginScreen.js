@@ -1,8 +1,9 @@
 import React from 'react';
-import { Dimensions, KeyboardAvoidingView, View, TouchableOpacity, Alert, Keyboard, Text, AsyncStorage } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, View, Alert, Keyboard } from 'react-native';
 import Expo, { AuthSession } from 'expo';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Button } from 'react-native-elements';
 
 import { RoundTextInput, LoadingModal } from '../components/common';
 import { logInUser } from '../actions';
@@ -14,9 +15,9 @@ const auth0Domain = 'https://thomashzhu.auth0.com';
 
 class LoginScreen extends React.Component {
   static navigationOptions = {
-    title: 'Login',
+    title: '',
     headerStyle: {
-      backgroundColor: '#ED8271',
+      backgroundColor: '#a29bfe',
       borderBottomWidth: 0,
     },
     headerTintColor: '#FFF',
@@ -154,26 +155,31 @@ class LoginScreen extends React.Component {
           />
         </View>
 
-        <TouchableOpacity
-          style={[styles.button, isLoginInfoNotEmpty && { backgroundColor: '#29ABEC' }]}
+        <Button
+          buttonStyle={styles.button}
           onPress={() => isLoginInfoNotEmpty && this.onSubmitButtonPressed(email, password)}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+          backgroundColor={isLoginInfoNotEmpty ? '#FF9800' : '#9E9E9E'}
+          icon={{ name: 'login', type: 'simple-line-icon' }}
+          title="Login"
+        />
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: '#29ABEC' }]}
+        <View style={styles.border} />
+
+        <Button
+          buttonStyle={styles.button}
           onPress={this.fbLogIn}
-        >
-          <Text style={styles.buttonText}>Facebook</Text>
-        </TouchableOpacity>
+          backgroundColor="#4267B2"
+          icon={{ name: 'social-facebook', type: 'simple-line-icon' }}
+          title="Login with Facebook"
+        />
 
-        <TouchableOpacity
-          style={[styles.button, { backgroundColor: '#29ABEC' }]}
+        <Button
+          buttonStyle={styles.button}
           onPress={this.twitterLogIn}
-        >
-          <Text style={styles.buttonText}>Twitter</Text>
-        </TouchableOpacity>
+          backgroundColor="#29ABEC"
+          icon={{ name: 'social-twitter', type: 'simple-line-icon' }}
+          title="Login with Twitter"
+        />
 
         <LoadingModal visible={this.state.isLoading} />
       </KeyboardAvoidingView>
@@ -191,7 +197,7 @@ LoginScreen.propTypes = {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#ED8271',
+    backgroundColor: '#a29bfe',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -199,17 +205,20 @@ const styles = {
     height: 136,
   },
   button: {
-    flexDirection: 'row',
     marginTop: 18,
-    height: 36,
-    width: Dimensions.get('window').width * 0.56,
-    backgroundColor: '#808080',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: Dimensions.get('window').width * 0.65,
+  },
+  border: {
+    height: 1,
+    width: Dimensions.get('window').width * 0.7,
+    backgroundColor: '#F1F1F6',
+    marginTop: 36,
+    marginBottom: 16,
   },
   buttonText: {
     color: 'white',
     fontSize: 14,
+    fontWeight: '200',
   },
 };
 

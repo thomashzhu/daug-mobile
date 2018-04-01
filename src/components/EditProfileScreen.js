@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 0 : NativeModules.StatusBarManager.HEIGHT,
   },
   headerButton: {
-    color: '#FD746C',
+    color: '#B4B4D9',
     fontSize: 14,
     fontWeight: 'bold',
   },

@@ -13,10 +13,10 @@ class PostDetailScreen extends Component {
   static navigationOptions = {
     title: 'Post',
     headerStyle: {
-      backgroundColor: '#FFF',
+      backgroundColor: '#a29bfe',
       borderBottomWidth: 0,
     },
-    headerTintColor: '#FD746C',
+    headerTintColor: '#FFF',
   };
 
   constructor(props) {

@@ -84,6 +84,8 @@ class IntroScreen extends React.Component {
               onSnapToItem={this.playAnimation}
             />
           </View>
+
+          <Text style={styles.slogan}>Daug... where pets hang out</Text>
         </View>
 
         <View style={styles.buttonRow}>
@@ -114,7 +116,7 @@ IntroScreen.propTypes = {
 const styles = {
   container: {
     flex: 1,
-    backgroundColor: '#ED8271',
+    backgroundColor: '#F1F1F6',
   },
   topContainer: {
     flex: 1,
@@ -130,10 +132,15 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
   },
+  slogan: {
+    color: '#B4B4D9',
+    fontWeight: 'bold',
+    fontSize: 22,
+  },
   buttonRow: {
     flexDirection: 'row',
     height: 90,
-    backgroundColor: '#FD746C',
+    backgroundColor: '#a29bfe',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -146,8 +153,9 @@ const styles = {
     alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 18,
+    fontWeight: '200',
   },
 };
 

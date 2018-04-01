@@ -72,7 +72,7 @@ const styles = {
   textInputContainer: {
     flex: 1,
     flexDirection: 'row',
-    width: Dimensions.get('window').width * 0.7,
+    width: Dimensions.get('window').width * 0.8,
     height: textInputHeight,
     borderRadius: textInputHeight / 2,
     borderWidth: 1,
