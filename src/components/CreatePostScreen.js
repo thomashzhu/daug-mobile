@@ -80,7 +80,7 @@ class CreatePostScreen extends Component {
   }
 
   takeAndUploadPhotoAsync = async () => {
-    const result = await ImagePicker.launchCameraAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
     });

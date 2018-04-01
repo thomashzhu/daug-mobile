@@ -86,7 +86,8 @@ class PostDetailScreen extends Component {
       <ScrollView>
         <SocialFeedPost
           item={selectedPost}
-          navigationDisabled
+          profileNavigationDisabled={false}
+          postNavigationDisabled
         />
 
         <Text style={styles.commentHeader}>

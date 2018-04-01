@@ -17,12 +17,13 @@ class SocialFeedList extends Component {
   }
 
   renderPost = ({ item }) => {
-    const { navigationDisabled } = this.props;
+    const { profileNavigationDisabled, postNavigationDisabled } = this.props;
 
     return (
       <SocialFeedPost
         item={item}
-        navigationDisabled={navigationDisabled}
+        profileNavigationDisabled={profileNavigationDisabled}
+        postNavigationDisabled={postNavigationDisabled}
       />
     );
   };
@@ -50,15 +51,17 @@ SocialFeedList.propTypes = {
     updatedAt: PropTypes.string.isRequired,
     userId: PropTypes.number.isRequired,
   })),
-  navigationDisabled: PropTypes.bool,
+  profileNavigationDisabled: PropTypes.bool,
+  postNavigationDisabled: PropTypes.bool,
+};
+
+SocialFeedList.defaultProps = {
+  profileNavigationDisabled: false,
+  postNavigationDisabled: false,
 };
 
 SocialFeedList.defaultProps = {
   posts: [],
-};
-
-SocialFeedList.defaultProps = {
-  navigationDisabled: false,
 };
 
 export default SocialFeedList;

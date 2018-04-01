@@ -93,12 +93,12 @@ class SocialFeedPost extends Component {
   }
 
   renderImage = () => {
-    const { item, navigationDisabled } = this.props;
+    const { item, postNavigationDisabled } = this.props;
 
     if (item && item.image) {
       return (
         <TouchableWithoutFeedback
-          disabled={navigationDisabled}
+          disabled={postNavigationDisabled}
           onPress={() => this.props.selectPost(item)}
         >
           <Image style={styles.postImage} source={{ uri: item.image }} />
@@ -118,7 +118,7 @@ class SocialFeedPost extends Component {
   }
 
   render() {
-    const { item, navigationDisabled } = this.props;
+    const { item, profileNavigationDisabled } = this.props;
     const {
       user, isCommented, commentCount, isLiked, likeCount,
     } = this.state;
@@ -126,7 +126,7 @@ class SocialFeedPost extends Component {
     return (
       <View>
         <TouchableOpacity
-          disabled={navigationDisabled}
+          disabled={profileNavigationDisabled}
           style={styles.postHeader}
           onPress={() => this.props.selectUser(user)}
         >
@@ -179,6 +179,9 @@ class SocialFeedPost extends Component {
 }
 
 SocialFeedPost.propTypes = {
+  user: PropTypes.shape({
+    loggedInUser: PropTypes.shape(),
+  }).isRequired,
   item: PropTypes.shape({
     createdAt: PropTypes.string.isRequired,
     description: PropTypes.string,
@@ -187,9 +190,15 @@ SocialFeedPost.propTypes = {
     updatedAt: PropTypes.string.isRequired,
     userId: PropTypes.number.isRequired,
   }).isRequired,
-  navigationDisabled: PropTypes.bool.isRequired,
+  profileNavigationDisabled: PropTypes.bool,
+  postNavigationDisabled: PropTypes.bool,
   selectUser: PropTypes.func.isRequired,
   selectPost: PropTypes.func.isRequired,
+};
+
+SocialFeedPost.defaultProps = {
+  profileNavigationDisabled: false,
+  postNavigationDisabled: false,
 };
 
 const styles = StyleSheet.create({

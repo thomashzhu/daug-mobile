@@ -24,7 +24,13 @@ class ProfileScreen extends React.Component {
     super(props);
 
     const { selectedUser, loggedInUser } = this.props.user;
-    const isCurrentUser = (!selectedUser || selectedUser.id === loggedInUser.id);
+    
+    let isCurrentUser;
+    if (this.props.isCurrentUser === true) {
+      isCurrentUser = true;
+    } else {
+      isCurrentUser = (!selectedUser || selectedUser.id === loggedInUser.id);
+    }
 
     this.state = {
       isLoading: false,
@@ -160,7 +166,8 @@ class ProfileScreen extends React.Component {
 
     return (
       <SocialFeedList
-        navigationDisabled
+        profileNavigationDisabled
+        postNavigationDisabled={false}
         posts={posts}
       />
     );
@@ -241,6 +248,7 @@ ProfileScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }).isRequired,
+  isCurrentUser: PropTypes.bool,
   user: PropTypes.shape({
     loggedInUser: PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -256,6 +264,10 @@ ProfileScreen.propTypes = {
   }).isRequired,
   logOutUser: PropTypes.func.isRequired,
   dismissUser: PropTypes.func.isRequired,
+};
+
+ProfileScreen.defaultProps = {
+  isCurrentUser: false,
 };
 
 const styles = {

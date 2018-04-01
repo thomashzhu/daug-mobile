@@ -44,16 +44,15 @@ class EditProfileScreen extends Component {
       const { status, data: json } = await axios.put(`${SERVER_ROOT_URL}/api/users/${id}`, {
         profile_image: profileImage, name, bio, email, phone_number: phoneNumber,
       });
-      debugger;
+      
       if (status === 200) {
         this.setState({ isLoading: false });
-        debugger;
+        
         this.props.updateUser(json);
-        debugger;
+        
         DeviceEventEmitter.emit('updatedProfile', { id });
         DeviceEventEmitter.emit('postCreated');
         
-        debugger;
         const { goBack } = this.props.navigation;
         goBack();
       } else {
