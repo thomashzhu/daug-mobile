@@ -101,7 +101,7 @@ class ProfileScreen extends React.Component {
     if (this.state.isLoading) {
       return (
         <ActivityIndicator
-          style={{ justifyContent: 'center' }}
+          style={styles.activityIndicator}
           size="large"
         />
       );
@@ -120,7 +120,7 @@ class ProfileScreen extends React.Component {
     if (!selectedUser && !loggedInUser) {
       return (
         <ActivityIndicator
-          style={{ justifyContent: 'center' }}
+          style={{ flex: 1 }}
           size="large"
         />
       );
@@ -221,6 +221,12 @@ ProfileScreen.propTypes = {
 };
 
 const styles = {
+  activityIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: 16,
+    marginBottom: 16,
+  },
   header: {
     height: 180,
   },

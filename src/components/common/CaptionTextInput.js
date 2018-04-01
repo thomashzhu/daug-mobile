@@ -4,20 +4,19 @@ import PropTypes from 'prop-types';
 
 const CaptionTextInput = (props) => {
   const {
-    caption, onChangeText, onSubmitEditing, value,
+    caption, onChangeText, onSubmitEditing, placeholder, value,
   } = props;
 
   return (
-    <View style={styles.container}>
-      {caption &&
-        <Text style={styles.caption}>{caption}</Text>
-      }
+    <View {...props} style={styles.container}>
+      <Text style={styles.caption}>{caption}</Text>
 
       <TextInput
         style={styles.textInput}
         underlineColorAndroid="rgba(0,0,0,0)"
         onChangeText={onChangeText}
         onSubmitEditing={onSubmitEditing}
+        placeholder={placeholder}
         value={value}
       />
 
@@ -30,19 +29,20 @@ CaptionTextInput.propTypes = {
   caption: PropTypes.string.isRequired,
   onChangeText: PropTypes.func.isRequired,
   onSubmitEditing: PropTypes.func,
+  placeholder: PropTypes.string,
   value: PropTypes.string.isRequired,
 };
 
 CaptionTextInput.defaultProps = {
   onSubmitEditing: () => {},
+  placeholder: '',
 };
 
 const styles = StyleSheet.create({
   container: {
     paddingLeft: 18,
     paddingRight: 18,
-    height: 60,
-    marginBottom: 12,
+    height: 56,
     backgroundColor: '#FFF',
   },
   caption: {

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, Text, FlatList, View, Image } from 'react-native';
+import { StyleSheet, ScrollView, Text, TextInput, FlatList, View, Image, Keyboard, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import _ from 'lodash';
 
 import SocialFeedPost from './common/SocialFeedPost';
-import CaptionTextInput from './common/CaptionTextInput';
 
 const SERVER_ROOT_URL = 'https://daug-app.herokuapp.com';
 
@@ -34,45 +33,42 @@ class PostDetailScreen extends Component {
     };
   }
 
+  fetchPost = async () => {
+    const { postId } = this.state;
+    const { data: { comments } } = await axios.get(`${SERVER_ROOT_URL}/api/posts/${postId}`);
+    this.setState({ comments: _.orderBy(comments, ['createdAt'], ['desc']) });
+  }
+
   createComment = async () => {
     try {
-      const {
-        postId, userId, newComment, comments,
-      } = this.state;
+      const { postId, userId, newComment } = this.state;
+      if (!newComment) return;
 
-      await axios.post(`${SERVER_ROOT_URL}/api/posts/${postId}/comment/${userId}`, newComment);
-      console.log('comment added', `${SERVER_ROOT_URL}/api/posts/${postId}/comment/${userId}`);
-      this.setState({
-        comments: [newComment, ...comments],
+      await axios.post(`${SERVER_ROOT_URL}/api/posts/${postId}/comment/${userId}`, {
+        comment: newComment,
       });
+
+      Keyboard.dismiss();
+      await this.fetchPost();
+
+      this.setState({ newComment: '' });
     } catch (error) {
       console.log('error', error);
     }
   }
 
-  renderComment = ({ item: comment, index }) => {
-    if (index === 0) {
-      const { newComment } = this.state;
-
-      return (
-        <CaptionTextInput
-          caption="New Comment"
-          onChangeText={text => this.setState({ newComment: text })}
-          onSubmitEditing={this.createComment}
-          value={newComment}
-        />
-      );
-    }
-
+  renderComment = ({ item: comment }) => {
     const { description, user } = comment;
     const { name, profile_image: profileImage } = user;
 
     return (
       <View style={styles.commentContainer}>
-        <Image
-          style={styles.commentAuthorPicture}
-          source={{ uri: profileImage }}
-        />
+        {profileImage &&
+          <Image
+            style={styles.commentAuthorPicture}
+            source={{ uri: profileImage }}
+          />
+        }
 
         <View style={styles.commentInfoContainer}>
           <Text style={{ flex: 1 }}>{name}</Text>
@@ -84,7 +80,7 @@ class PostDetailScreen extends Component {
 
   render() {
     const { selectedPost } = this.props.post;
-    const { comments } = selectedPost;
+    const { newComment, comments } = this.state;
 
     return (
       <ScrollView>
@@ -96,6 +92,23 @@ class PostDetailScreen extends Component {
         <Text style={styles.commentHeader}>
           {comments ? comments.length : 'NO'} COMMENTS
         </Text>
+
+        <View style={styles.newComment}>
+          <TextInput
+            style={styles.newCommentInput}
+            underlineColorAndroid="rgba(0,0,0,0)"
+            onChangeText={text => this.setState({ newComment: text })}
+            placeholder="New comment..."
+            value={newComment}
+          />
+
+          <TouchableOpacity
+            style={{ justifyContent: 'center' }}
+            onPress={this.createComment}
+          >
+            <Text style={styles.sendButtonText}>SEND</Text>
+          </TouchableOpacity>
+        </View>
 
         <FlatList
           style={{ flex: 1 }}
@@ -121,7 +134,7 @@ PostDetailScreen.propTypes = {
         description: PropTypes.string.isRequired,
         user: PropTypes.shape({
           name: PropTypes.string.isRequired,
-          profile_image: PropTypes.string.isRequired,
+          profile_image: PropTypes.string,
         }).isRequired,
       })),
     }).isRequired,
@@ -136,6 +149,22 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     color: '#666',
     fontWeight: 'bold',
+  },
+  newComment: {
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingLeft: 16,
+    paddingRight: 16,
+    backgroundColor: '#FFF',
+    marginBottom: 16,
+  },
+  sendButtonText: {
+    fontWeight: 'bold',
+    color: '#007AFF',
+  },
+  newCommentInput: {
+    flex: 1,
   },
   commentContainer: {
     height: 54,

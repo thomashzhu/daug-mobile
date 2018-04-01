@@ -16,7 +16,6 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case REHYDRATE:
-      console.log('rehydrate', action.payload);
       return action.payload ? action.payload.user : state;
     case USER_LOGGED_IN:
       return { ...state, loggedInUser: action.payload };

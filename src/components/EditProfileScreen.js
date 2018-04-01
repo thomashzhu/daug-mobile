@@ -161,12 +161,14 @@ class EditProfileScreen extends Component {
               </View>
 
               <CaptionTextInput
+                style={{ marginBottom: 12 }}
                 caption="Name"
                 onChangeText={text => this.setState({ name: text })}
                 value={name}
               />
               
               <CaptionTextInput
+                style={{ marginBottom: 12 }}
                 caption="Bio"
                 onChangeText={text => this.setState({ bio: text })}
                 value={bio}
@@ -177,6 +179,7 @@ class EditProfileScreen extends Component {
 
             <View style={styles.privateProfile}>
               <CaptionTextInput
+                style={{ marginBottom: 12 }}
                 caption="Email"
                 onChangeText={text => this.setState({ email: text })}
                 value={email}
